@@ -218,8 +218,9 @@ Serving HTTP on :: port 8000 (http://[::]:8000/) ...</code></pre></li>
 <pre class="language-text"><code>; curl -6 https://ifconfig.co
 2401:4900:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx</code></pre></li>
 <li>
-<p>Allow ipv6 incoming connections on the router firewall.
-For this, goto <code>http://192.168.1.1/</code> -&gt; login -&gt; security -&gt; firewall then set <code>PERMIT</code>. It&rsquo;ll look like this:</p>
+<p>Allow ipv6 incoming connections on the router firewall.<br>
+For this, goto <code>http://192.168.1.1/</code> -&gt; login -&gt; security -&gt; firewall then set <code>PERMIT</code>.<br>
+It&rsquo;ll look like this:</p>
 <pre class="language-text"><code>IPv6	DEFAULTWANv6	ppp111	In	Permit</code></pre><p>ppp111 refers to your WAN interface and br0 is your local bridge interface (192.168.x.x)</p>
 </li>
 <li>
