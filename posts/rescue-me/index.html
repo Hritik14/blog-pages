@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Rescue me always :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="My latest arch update broke system boot and plugging in a pen drive is too much work, so I installed grml on my local hard disk partition. Post also explores how live boot works." />
+<meta name="keywords" content="arch, rescue, grml" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/rescue-me/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Rescue me always">
+<meta property="og:description" content="My latest arch update broke system boot and plugging in a pen drive is too much work, so I installed grml on my local hard disk partition. Post also explores how live boot works." />
+<meta property="og:url" content="http://localhost:1313/posts/rescue-me/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-09-14 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/rescue-me/">Rescue me always</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-09-14</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>My arch install broke because of a <a href="https://bugs.archlinux.org/task/69591">module rename</a>. All I would see was
+something like</p>
+<pre class="language-text"><code>Failed to open lvm
+(initramfs) Cannot open access to console, the root account is locked.
+See sulogin(8) man page for more details.
+
+See journal for logs - yada yada</code></pre><p>Since root was unable to be mounted, no journal persisted. Hence, I cannot see the
+journal logs, can I ?</p>
+<p>Anyway, the fix was simple. Get a rescue boot media like <a href="https://grml.org/">grml</a> and regenerate <code>initramfs</code>
+using <code>lvm2</code> instead of <code>sd-lvm2</code>.</p>
+<p>Now, I was able to get <code>grml</code> on a pen drive to work on this machine but I&rsquo;m not always
+this lucky (all my usb ports are bricked and only work when the shrodinger&rsquo;s cat meows).<br>
+Also, I&rsquo;m too lazy to plug a pen drive next time.
+Since I just used <code>grml</code> via a pendrive, can I have it boot from the hard disk too ?</p>
+<p>grml&rsquo;s <a href="https://grml.org/faq/#hdinstall">website says: no</a></p>
+<blockquote>
+<p>Is it possible to install Grml to harddisk?</p>
+<p>No. If you want to install a Debian system take a look at grml-debootstrap (or use the Debian Installer instead).</p></blockquote>
+<p>Well, not every no is a no.</p>
+<p>grml uses <code>grub</code> as bootloader with the following entry:</p>
+<div class="collapsable-code">
+  <input id="code-1758665511255401000" type="checkbox"  />
+  <label for="code-1758665511255401000"><span class="collapsable-code__language">cfg</span><span class="collapsable-code__title">boot/grub/grmlsmallamd64_default.cfg</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-cfg"><code>menuentry &#34;grml-small-amd64 2025.08&#34; {
+    set gfxpayload=keep
+    echo &#39;Loading kernel...&#39;
+    linux   /boot/grmlsmallamd64/vmlinuz apm=power-off boot=live live-media-path=/live/grml-small-amd64/ bootid=grmlsmallamd64202508 &#34;${loopback}&#34; ${kernelopts} nomce 
+    echo &#39;Loading initrd...&#39;
+    initrd  /boot/grmlsmallamd64/initrd.img
+}</code></pre>
+</div><p>It sets kernel parameters to enable live boot via <code>boot=live</code> but <a href="https://www.kernel.org/doc/html/v4.14/admin-guide/kernel-parameters.html">no such kernel parameter exists</a>.<br>
+It turns out, init programs inside the <code>initramfs</code> can look for these parms and set the system for bootup.</p>
+<p>One such program is <a href="https://live-team.pages.debian.net/live-manual/html/live-manual.en.html#321">live-boot</a> by debian.</p>
+<blockquote>
+<p>live-boot is a collection of scripts providing hooks for the initramfs-tools, used to generate an initramfs capable of booting live systems, such as those created by live-build. This includes the live system ISOs, netboot tarballs, and USB stick images.</p></blockquote>
+<p><a href="https://live-team.pages.debian.net/live-manual/html/live-manual.en.html#321">Arch docs</a> also mention how to have grml directly on my esp (/boot).</p>
+<p>Anyway, I don&rsquo;t have enough space on the esp to store entire grml (~500M) and it doesn&rsquo;t
+mention how can I point the <code>live-media-path</code> to a different partition.
+So, lets see how <code>live-boot</code> works.</p>
+<h2 id="live-boot">live-boot<a href="#live-boot" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p><code>live-boot</code> project on commit <code>ff8867c</code> does the following:</p>
+<ol>
+<li>
+<p>Try 60 times, 1 per second, to find a live-bootable file system</p>
+<div class="collapsable-code">
+  <input id="code-1758665511255644000" type="checkbox"  />
+  <label for="code-1758665511255644000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-sh"><code># Scan local devices for the image
+i=0
+while [ &#34;$i&#34; -lt 60 ]
+do
+    livefs_root=$(find_livefs ${i})
+
+    if [ -n &#34;${livefs_root}&#34; ]
+    then
+        break
+    fi
+
+    sleep 1
+    i=$((i &#43; 1))
+done</code></pre>
+</div><p><em>yes, you&rsquo;ve 60 seconds to make your livefs available</em></p>
+</li>
+<li>
+<p>Unless <code>LIVE_MEDIA</code> is specified on command line, check removable then non removable devices</p>
+<div class="collapsable-code">
+  <input id="code-1758665511255672000" type="checkbox"  />
+  <label for="code-1758665511255672000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-sh"><code>find_livefs ()
+{   ...
+    devices_to_scan=&#34;$(removable_dev &#39;sys&#39;) $(non_removable_dev &#39;sys&#39;)&#34;
+    ...
+    for dev in $(subdevices &#34;${sysblock}&#34;)
+    do
+        if check_dev &#34;${dev}&#34;
+        then
+            return 0
+        fi
+    done
+...
+}</code></pre>
+</div></li>
+<li>
+<p>Mount whatever is mountable (also tries lvm, iso etc) and check inside</p>
+<div class="collapsable-code">
+  <input id="code-1758665511255691000" type="checkbox"  />
+  <label for="code-1758665511255691000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-sh"><code>check_dev ()
+{ ...
+    mount -t ${fstype} -o ro,noatime &#34;${devname}&#34; ${mountpoint} || continue
+    ...
+    if is_live_path ${mountpoint} &amp;&amp; \
+        ([ &#34;${skip_uuid_check}&#34; ] || matches_uuid ${mountpoint})
+    then
+        echo ${mountpoint}
+        return 0
+    else
+        umount ${mountpoint} 2&gt;/dev/null
+    fi
+   ...
+}</code></pre>
+</div></li>
+<li>
+<p>If a file with <code>.squashfs</code> or other fs extension exist inside a directory called <code>live/</code>
+(<code>LIVE_MEDIA_PATH=&quot;live&quot;</code> in <code>0001-init-vars.sh</code>) boot from here.</p>
+<div class="collapsable-code">
+  <input id="code-1758665511255712000" type="checkbox"  />
+  <label for="code-1758665511255712000"><span class="collapsable-code__language">bash</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-bash"><code>is_live_path()
+{
+    DIRECTORY=&#34;${1}/${LIVE_MEDIA_PATH}&#34;
+    for FILESYSTEM in squashfs ext2 ext3 ext4 xfs dir jffs
+    do
+        if ls &#34;${DIRECTORY}/&#34;*.${FILESYSTEM} &gt; /dev/null 2&gt;&amp;1
+        then
+            return 0
+        fi
+    done
+    return 1
+}</code></pre>
+</div></li>
+<li>
+<p>And finally mount the live filesystem&rsquo;s root to <code>/root</code> via <code>setup_unionfs</code>.</p>
+<div class="collapsable-code">
+  <input id="code-1758665511255731000" type="checkbox"  />
+  <label for="code-1758665511255731000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-sh"><code>    if [ -n &#34;${MODULETORAMFILE}&#34; ] || [ -n &#34;${PLAIN_ROOT}&#34; ]
+    then
+        setup_unionfs &#34;${livefs_root}&#34; &#34;${rootmnt?}&#34;
+    else
+        mac=&#34;$(get_mac)&#34;
+        mac=&#34;$(echo &#34;${mac}&#34; | sed &#39;s/-//g&#39;)&#34;
+        mount_images_in_directory &#34;${livefs_root}&#34; &#34;${rootmnt}&#34; &#34;${mac}&#34;
+    fi</code></pre>
+</div></li>
+</ol>
+<p>and btw, if you&rsquo;re wondering (like I did) and greping the entire codebase (like I did)
+to find out where <code>$rootmnt</code> is set, you won&rsquo;t find it. It is set in <code>initramfs</code>&rsquo;s <code>init</code>
+script:</p>
+<div class="collapsable-code">
+  <input id="code-1758665511255771000" type="checkbox"  />
+  <label for="code-1758665511255771000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">init</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-sh"><code>export rootmnt=/root</code></pre>
+</div><p>So, whenever an initramfs with live-boot loads, it checks everything it
+possibly can, starting with removable media, to find a <code>/live</code> directory and
+mounts file the ending with <code>squashfs</code> (or similar)
+to <code>/root</code>.</p>
+<p><code>grml</code> explicitly set their <code>live-media-path=/live/grml-small-amd64/</code> so it doesn&rsquo;t look for <code>live/</code>
+but looks for this path instead.</p>
+<p>The picture is clear, I just need to:</p>
+<ol>
+<li>Boot a <a href="https://hritik.sh/posts/linux-boot/">linux kernel</a> with <code>boot=live live-media-path=/live/grml-small-amd64/</code> parameters</li>
+<li>Have an initramfs with <code>live-boot</code> package</li>
+<li>Copy <code>/live/grml-small-amd64/</code> from grml&rsquo;s iso image to <em>any</em> of my partitions.</li>
+</ol>
+<h2 id="encryption-">Encryption ?<a href="#encryption-" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p><em>Warning: dead-end</em></p>
+<p><code>live-boot</code> seems to have some <code>luks</code> code as well, would it be able to detect a
+<code>/live</code> dir in my luks -&gt; lvm -&gt; xfs setup ?</p>
+<p>At the top of live-boot script, it tries to decrypt partitions.</p>
+<div class="collapsable-code">
+  <input id="code-1758665511255805000" type="checkbox"  />
+  <label for="code-1758665511255805000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-sh"><code>	if [ -x /scripts/local-top/cryptroot ]
+	then
+		/scripts/local-top/cryptroot
+	fi</code></pre>
+</div><p>Let&rsquo;s ensure if <code>luks</code> tools are present in <code>grml</code>&rsquo;s initramfs. First extract it and then grep
+for <code>luks</code></p>
+<pre class="language-sh"><code>; cpio -idmv &lt; boot/grmlsmallamd64/initrd.img
+; grep -r &#39;luks&#39;</code></pre><p>Nothing. The directory structure also doesn&rsquo;t make sense. Where&rsquo;s the rest of the directories ?</p>
+<pre class="language-sh"><code>; tree -L 6 .
+.
+└── usr
+    └── lib
+        └── modules
+            └── 6.12.41&#43;deb13-amd64
+                └── kernel
+                    ├── arch
+                    ├── crypto
+                    ├── drivers
+                    ├── fs
+                    ├── lib
+                    ├── net
+                    └── sound
+
+13 directories, 0 files</code></pre><p>Only kernel modules are here.
+It first I thought, maybe the cpio was not extracted properly. After several tries
+I observed compressed cpio size &gt; extracted !? It doesn&rsquo;t make sense</p>
+<pre class="language-sh"><code>; file boot/grmlsmallamd64/initrd.img
+boot/grmlsmallamd64/initrd.img: ASCII cpio archive (SVR4 with no CRC)
+
+; cpio -idmv &lt; boot/grmlsmallamd64/initrd.img
+; du -sh .
+32M     .
+
+; ls -lh boot/grmlsmallamd64/initrd.img
+-rw-r--r-- 1 neo staff 48M Aug 15 23:06 boot/grmlsmallamd64/initrd.img</code></pre><p>Something must be wrong with the img file, look deeper:</p>
+<pre class="language-text"><code>; binwalk -e boot/grmlsmallamd64/initrd.img
+
+-------------------------------------------------------------------------------------------------------------------------
+DECIMAL                            HEXADECIMAL                        DESCRIPTION
+-------------------------------------------------------------------------------------------------------------------------
+0                                  0x0                                CPIO ASCII archive, file count: 1296
+30874112                           0x1D71A00                          XZ compressed data, total size: 18760580 bytes
+-------------------------------------------------------------------------------------------------------------------------
+[&#43;] Extraction of cpio data at offset 0x0 completed successfully
+[&#43;] Extraction of xz data at offset 0x1D71A00 completed successfully
+-------------------------------------------------------------------------------------------------------------------------
+
+Analyzed 1 file for 85 file signatures (187 magic patterns) in 1.5 seconds</code></pre><p>So, there&rsquo;s 2 concatenated archives present inside the same file, and kernel even extracts it
+properly !</p>
+<p>There&rsquo;s <code>cpio</code> inside the <code>xz</code> too:</p>
+<pre class="language-text"><code>; cd extractions/initrd.img.extracted/
+; file 1D71A00/decompressed.bin
+1D71A00/decompressed.bin: ASCII cpio archive (SVR4 with no CRC)</code></pre><p>Anyway, I found my missing files</p>
+<pre class="language-text"><code>; cpio -idmv &lt; 1D71A00/decompressed.bin
+; ls
+0  1D71A00  bin  conf  cryptroot  etc  init  lib  lib64  run  sbin  scripts  usr</code></pre><p>Although, files in the initramfs I get dropped in after failed boot of grml
+(with only initramfs and no <code>live-media-path</code>) vs what I see here are
+different. Idk how.<br>
+In the failed boot terminal, there&rsquo;s no
+<code>/scripts/local-top/cryptroot</code> but, in the extraction, there is. <em>Maybe</em> I&rsquo;ll
+look at this in the future.</p>
+<p>So, encryption -&gt; no.</p>
+<h2 id="simpleton-way-extra-partition">Simpleton way: extra partition<a href="#simpleton-way-extra-partition" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Let&rsquo;s be a simple human being and just get a normal partition and have the
+<code>/live/</code> directory there.</p>
+<p>I&rsquo;ll have to resize a vol, create a new partition and create a filesystem
+on it.<br>
+I&rsquo;ve created one <code>/dev/sdb4</code> and formatted it with <code>ext4</code>.<br>
+Then,</p>
+<ol>
+<li>
+<p>Copy the <code>/live</code> directory from the iso to the new partition</p>
+<pre class="language-text"><code>[root@Journey hritik]# mount /dev/sdb4 /mnt
+[root@Journey hritik]# cp -r live /mnt/.
+[root@Journey hritik]# ls /mnt/
+live  lost&#43;found
+[root@Journey hritik]# ls /mnt/live/
+grml-small-amd64</code></pre></li>
+<li>
+<p>Copy the kernel and initramfs to the esp (<code>/boot</code>)</p>
+<pre class="language-text"><code>[root@Journey hritik]# cp boot/grmlsmallamd64/vmlinuz /boot/vmlinuz-rescue
+[root@Journey hritik]# cp boot/grmlsmallamd64/initrd.img /boot/initrd-rescue.img</code></pre></li>
+<li>
+<p>Finally, create a bootloader entry for grml kernel and initramfs. I use systemd-boot,
+so, here&rsquo;s how it looks:</p>
+<pre class="language-text"><code>title Rescue (grml)
+linux /vmlinuz-rescue
+initrd /initrd-rescue.img
+options apm=power-off boot=live live-media-path=/live/grml-small-amd64/ nomce keyboard=dvorak grml2ram ssh=rescue</code></pre></li>
+</ol>
+<p>I&rsquo;ve used a few extra parameters documented in the <a href="https://grml.org/cheatcodes/">grml cheatcodes</a>.</p>
+<p>We&rsquo;ve sucessfully installed grml on a hard disk, although this is non persistent (<a href="https://github.com/grml/grml/wiki/persistency">can be made persistent</a>).
+So, exactly like a live boot but from a hard disk partition.</p>
+<h2 id="notes">Notes<a href="#notes" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h3 id="boot-from-grml-in-bootloader-entry-but-with-a-pen-drive-plugged-in">Boot from grml in bootloader entry but with a pen drive plugged in<a href="#boot-from-grml-in-bootloader-entry-but-with-a-pen-drive-plugged-in" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>This shows a warning that <code>bootid.txt</code> is present but not specified in the
+kernel parameters &ndash; indicating that it picked up the <code>/live</code> directory
+from the pendrive (as it&rsquo;s a removeable media and was scanned first).</p>
+<p>Although, after a successfull boot into grml, <code>lsblk</code> shows the internal
+disk partition (<code>sdb4</code>) is mounted for live media.
+I&rsquo;m not sure when this pivot happened.</p>
+<h3 id="does-a-lookup-for-live-across-all-devices-make-it-possible-to-hijack-live-boot-">Does a lookup for <code>/live</code> across all devices make it possible to hijack live-boot ?<a href="#does-a-lookup-for-live-across-all-devices-make-it-possible-to-hijack-live-boot-" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>Certainly.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/airtel-ipv6-opening-ports/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Open ports on local ipv6 devices to the internet</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="http://localhost:1313/posts/docker-mount-shenanigans/">
+                <span class="button__text">Docker mount shenanigans</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

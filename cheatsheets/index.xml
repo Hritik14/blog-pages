@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cheatsheets on </title>
+    <link>http://localhost:1313/cheatsheets/</link>
+    <description>Recent content in Cheatsheets on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Sat, 28 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/cheatsheets/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Web cheatsheet</title>
+      <link>http://localhost:1313/cheatsheets/web/</link>
+      <pubDate>Sat, 28 Jun 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/cheatsheets/web/</guid>
+      <description>&lt;p&gt;You can send &lt;code&gt;postMessage&lt;/code&gt; to any window, even if it&amp;rsquo;s a different origin.&lt;/p&gt;
+&lt;p&gt;User input in &lt;code&gt;document.querySelector&lt;/code&gt; can enable to select malicious item using &lt;code&gt;nth-child&lt;/code&gt;&lt;/p&gt;</description>
+      <content>&lt;p&gt;You can send &lt;code&gt;postMessage&lt;/code&gt; to any window, even if it&amp;rsquo;s a different origin.&lt;/p&gt;
+&lt;p&gt;User input in &lt;code&gt;document.querySelector&lt;/code&gt; can enable to select malicious item using &lt;code&gt;nth-child&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;SOP does not block access to &lt;code&gt;window.frames.length&lt;/code&gt; (to do &lt;code&gt;postMessage&lt;/code&gt;) to a different origin.&lt;/p&gt;
+&lt;p&gt;Blob documents (data:text/html, &amp;hellip;)created from null origins are run in isolated process for security [ONLY IN CHROME]&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;==&lt;/code&gt; converts type to match. ie &lt;code&gt;e.data == &#39;blob loaded&#39;&lt;/code&gt; will take long time if e.data is not string and conversion is costly&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;window[0]&lt;/code&gt; is same as &lt;code&gt;window.frames[0]&lt;/code&gt; is same as &lt;code&gt;document.querySelectorAll(&#39;iframe&#39;)[0].contentWindow&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;origin&lt;/code&gt; and &lt;code&gt;location.href&lt;/code&gt; can be very different. Eg: sandboxed iframe has &lt;code&gt;null&lt;/code&gt; origin but &lt;code&gt;location.href&lt;/code&gt; is &lt;code&gt;correct url&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;prototype-pollution&#34;&gt;Prototype pollution&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;__proto__&lt;/code&gt; is same as &lt;code&gt;constructor.prototype&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;regex&#34;&gt;Regex&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;/token/g&lt;/code&gt;.test(target) cannot be used multiple times on different targets. It maintains &lt;code&gt;lastIndex&lt;/code&gt; of last match and &lt;strong&gt;restarts from there&lt;/strong&gt;. ie if &lt;code&gt;target=&amp;quot;token&amp;quot;&lt;/code&gt;, it will match first time, then set index to &lt;code&gt;5&lt;/code&gt; and start match from there, matched again against same &lt;code&gt;token&lt;/code&gt;, it will return false&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;resources&#34;&gt;Resources&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/RenwaX23/XSS-Payloads/blob/master/Without-Parentheses.md&#34;&gt;https://github.com/RenwaX23/XSS-Payloads/blob/master/Without-Parentheses.md&lt;/a&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Volatality Cheatsheet (2 and 3, but mostly 3)</title>
+      <link>http://localhost:1313/cheatsheets/volatality/</link>
+      <pubDate>Sun, 30 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/cheatsheets/volatality/</guid>
+      <description>&lt;p&gt;Good reference: &lt;a href=&#34;https://andreafortuna.org/2017/07/31/volatility-my-own-cheatsheet-part-6-windows-registry/&#34;&gt;https://andreafortuna.org/2017/07/31/volatility-my-own-cheatsheet-part-6-windows-registry/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;dump-registry&#34;&gt;Dump registry&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;vol2 -f voltest.dmp &amp;ndash;profile=Win7SP1x86 dumpregistry -D output_dir&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;vol3 -f voltest.dmp -o output_dir windows.registry.hivelist &amp;ndash;dump&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;</description>
+      <content>&lt;p&gt;Good reference: &lt;a href=&#34;https://andreafortuna.org/2017/07/31/volatility-my-own-cheatsheet-part-6-windows-registry/&#34;&gt;https://andreafortuna.org/2017/07/31/volatility-my-own-cheatsheet-part-6-windows-registry/&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;dump-registry&#34;&gt;Dump registry&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;vol2 -f voltest.dmp &amp;ndash;profile=Win7SP1x86 dumpregistry -D output_dir&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;vol3 -f voltest.dmp -o output_dir windows.registry.hivelist &amp;ndash;dump&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

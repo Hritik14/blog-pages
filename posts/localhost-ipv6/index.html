@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>localhost might resolve to many things :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="I was scratching my head for quite sometime about why I was able to do
+; psql -U neo -h localhost -d postgres -p 5432 psql (14.13 (Homebrew)) Type &#34;help&#34; for help. postgres=#without any password but the following kept failing
+" />
+<meta name="keywords" content="localhost, ipv6, postgres, ports" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/localhost-ipv6/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="localhost might resolve to many things">
+<meta property="og:description" content="I was scratching my head for quite sometime about why I was able to do
+; psql -U neo -h localhost -d postgres -p 5432 psql (14.13 (Homebrew)) Type &#34;help&#34; for help. postgres=#without any password but the following kept failing
+" />
+<meta property="og:url" content="http://localhost:1313/posts/localhost-ipv6/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-02-10 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/localhost-ipv6/">localhost might resolve to many things</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-02-10</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>I was scratching my head for quite sometime about why I was able to do</p>
+<pre class="language-bash"><code>; psql -U neo -h localhost -d postgres -p 5432
+psql (14.13 (Homebrew))
+Type &#34;help&#34; for help.
+
+postgres=#</code></pre><p>without any password but the following kept failing</p>
+<pre class="language-bash"><code>; psql -U neo -h 127.0.0.1 -d postgres -p 5432
+Password for user neo:
+psql: error: connection to server at &#34;127.0.0.1&#34;, port 5432 failed: FATAL:  password authentication failed for user &#34;neo&#34;</code></pre><p>I was trying to setup a local webapp (confluence) and it kept asking me db credentials and failing on both <code>localhost</code> and <code>127.0.0.1</code>.</p>
+<p>It was driving me bonkers!</p>
+<p>As any sane person, I tried to look at my postgres config file</p>
+<p>/opt/homebrew/var/postgresql@14/pg_hba.conf</p>
+<pre class="language-config"><code># TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# &#34;local&#34; is for Unix domain socket connections only
+local   all             all                                     trust
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            trust
+# IPv6 local connections:
+host    all             all             ::1/128                 trust
+# Allow replication connections from localhost, by a user with the
+# replication privilege.
+local   replication     all                                     trust
+host    replication     all             127.0.0.1/32            trust
+host    replication     all             ::1/128                 trust</code></pre><p>Postgres should always allow empty password locally. Why is it even asking for a password ?</p>
+<p>I tried resetting password multiple times connecting to <code>psql -h localhost</code> and then reconnecting with the same password at
+<code>psql -h 127.0.0.1</code>.</p>
+<p>Failed.</p>
+<p>Anyway, since confluence is rejecting empty password,
+I tried setting up a password by connecting to <code>psql -h localhost</code> and
+used the same connection string (<code>localhost</code>) and password in confluence.</p>
+<p>Failed.</p>
+<p>Makes you wonder, is confluence looking at the same postgres instance I&rsquo;m looking at ?<br>
+Who all are listening at 5432 ?</p>
+<pre class="language-bash"><code>; lsof -i :5432
+COMMAND    PID USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+ssh      39802  neo   42u  IPv4 0xa989e41f6513c271      0t0  TCP localhost:postgresql (LISTEN)
+postgres 52660  neo    7u  IPv6 0xa989e42433f89de1      0t0  TCP localhost:postgresql (LISTEN)</code></pre><p>Two processes !?</p>
+<pre class="language-bash"><code>; ps -e | grep 39802
+39802 ??         0:01.44 ssh: /Users/neo/Library/Application Support/rancher-desktop/lima/0/ssh.sock [mux]</code></pre><p>A docker container !
+Let&rsquo;s verify,</p>
+<pre class="language-bash"><code>; docker container list | less -S
+CONTAINER ID   IMAGE                                COMMAND                  CREATED        STATUS                    PORTS                              &gt;
+f52bdadf5549   postgres:16                          &#34;docker-entrypoint.s…&#34;   2 weeks ago    Up 3 days (healthy)   127.0.0.1:5432-&gt;5432/tcp           &gt;</code></pre><p>This was from one of my project&rsquo;s docker compose file, running for quite some time.
+Both <code>docker</code> and my host <code>postgresql</code> was listening at 5432. How is this possible ?</p>
+<p>Since docker was running for quite sometime and I just ran postgres, the juice lies in postgres logs</p>
+<p>/opt/homebrew/var/log/postgresql@14.log</p>
+<pre class="language-logs"><code>2025-02-10 16:40:02.716 IST [55542] LOG:  starting PostgreSQL 14.13 (Homebrew) on aarch64-apple-darwin23.4.0, compiled by Apple clang version 15.0.0 (clang-1500.3.9.4), 64-bit
+2025-02-10 16:40:02.723 IST [55542] LOG:  listening on IPv6 address &#34;::1&#34;, port 5432
+-------------------------------------------------------------------------------------------------------------------------------------------
+| 2025-02-10 16:40:02.723 IST [55542] LOG:  could not bind IPv4 address &#34;127.0.0.1&#34;: Address already in use                               |
+| 2025-02-10 16:40:02.723 IST [55542] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.    |
+-------------------------------------------------------------------------------------------------------------------------------------------
+2025-02-10 16:40:02.724 IST [55542] LOG:  listening on Unix socket &#34;/tmp/.s.PGSQL.5432&#34;
+2025-02-10 16:40:02.792 IST [55546] LOG:  database system was shut down at 2025-02-10 16:39:21 IST
+2025-02-10 16:40:02.810 IST [55542] LOG:  database system is ready to accept connections</code></pre><p>Postgres tried to bind to <code>127.0.0.1:5432</code> and correctly failed since docker had already claimed that
+BUT silently continued as if everything is all ok. Had it errored here, I&rsquo;d have saved some headache.</p>
+<p>This made the following bindings possible</p>
+<pre class="language-text"><code>docker   -&gt; 127.0.0.1:5432
+postgres -&gt; [::1]:5432</code></pre><p><code>psql</code> resolved <code>localhost</code> to <code>[::1]</code> and sucessfully connected to my host <code>postgres</code> instance but with <code>127.0.0.1</code>
+it pointed to <code>docker</code>&rsquo;s instance whose password I neither set nor know.</p>
+<p>Why was confluence failing ?</p>
+<p>For some reason, <code>localhost</code> in <code>jdbc</code> resolved to <code>127.0.0.1</code>. This also happened in dbeaver.</p>
+<p>I stopped the docker container AND restarted postgres, everything was working as expected</p>
+<pre class="language-bash"><code>; docker container stop f52bdadf5549
+f52bdadf5549
+
+; brew services restart postgresql@14
+Stopping `postgresql@14`... (might take a while)
+==&gt; Successfully stopped `postgresql@14` (label: homebrew.mxcl.postgresql@14)
+==&gt; Successfully started `postgresql@14` (label: homebrew.mxcl.postgresql@14)
+
+; psql -U neo -h 127.0.0.1 -d postgres -p 5432
+psql (14.13 (Homebrew))
+Type &#34;help&#34; for help.
+
+postgres=#
+\q
+
+; psql -U neo -h localhost -d postgres -p 5432
+psql (14.13 (Homebrew))
+Type &#34;help&#34; for help.
+
+postgres=#
+\q</code></pre>
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/add-to-prompt/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Add to your system prompt</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="http://localhost:1313/posts/go-type/">
+                <span class="button__text">Type conversion in go</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

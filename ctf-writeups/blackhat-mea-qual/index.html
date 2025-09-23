@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>BlackHat MEA Qualification CTF :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Warm me up Flask based application. Cookie leaks OTP value.
+username and password field is vulnerable to sql injection. A union based injection gives redirection to /flag with login cookie set. Payload: b&rsquo; UNION ALL SELECT &lsquo;admin&rsquo;,&lsquo;daa&rsquo; &ndash;
+" />
+<meta name="keywords" content="ctf, writeup, blackhat" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/ctf-writeups/blackhat-mea-qual/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="BlackHat MEA Qualification CTF">
+<meta property="og:description" content="Warm me up Flask based application. Cookie leaks OTP value.
+username and password field is vulnerable to sql injection. A union based injection gives redirection to /flag with login cookie set. Payload: b&rsquo; UNION ALL SELECT &lsquo;admin&rsquo;,&lsquo;daa&rsquo; &ndash;
+" />
+<meta property="og:url" content="http://localhost:1313/ctf-writeups/blackhat-mea-qual/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2023-10-09 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/ctf-writeups/blackhat-mea-qual/">BlackHat MEA Qualification CTF</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2023-10-09</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="warm-me-up">Warm me up<a href="#warm-me-up" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Flask based application.
+Cookie leaks OTP value.</p>
+<p>username and password field is vulnerable to sql injection. A union based injection gives redirection to /flag with login cookie set.
+Payload:
+b&rsquo; UNION ALL SELECT &lsquo;admin&rsquo;,&lsquo;daa&rsquo; &ndash;</p>
+<p><em>It&rsquo;d be interested to see the source code for this</em></p>
+<h1 id="hardy">Hardy<a href="#hardy" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>x-forwarded-for changes the IP being attacked.</p>
+<h1 id="what-am-i">What am I?<a href="#what-am-i" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>After banging head at multiple decompilers, <a href="https://manalyzer.org">https://manalyzer.org</a> showed a bmp image in &ldquo;Resources&rdquo; section
+Cheat: I searched md5sum of dll on google and it was in manalyzer logs</p>
+<h1 id="not-supported">Not supported<a href="#not-supported" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>vol.py -f memdump.mem windows.pslist | grep -i notepad
+get pid
+vol.py -f memdump.mem -o dump_dir windows.memmap ‑‑dump ‑‑pid <PID>
+(need linux for this one, hey lima)
+strings -e l <dumpfile>
+look for bhflag, remove spaces, submit without flag format as prescribed</p>
+<h1 id="extend">Extend<a href="#extend" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Do some basic vodoo to get the chrome dir. Now what ?</p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Hacking smart homes :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Backstory There are times when you need your &ldquo;smart&rdquo; devices to obey you. A simple api call is all you need to make them obey you. A simple &ldquo;Hey, turn on&rdquo; command interface but you&rsquo;re denied of it because, eh, APIs are not what there industries are there for. It&rsquo;s the job of open source, right ? Anyway, so we get water supply at some specific hours (very odd hours, I&rsquo;m usually sleeping) and it is required that I turn on the water pump at, say 4 in the morning and turn it off when water is filled. Sounds like an easy job for a smart appliance. We got one. It&rsquo;s called XYZ Company Smart Switch. Now we can easily schedule the water pump to turn on at 4. But what about turning off ? How do we do that ? Getting a simple water alarm was easy but now, whenever water fills up at 5 or sometimes at 6, it wakes up everyone and someone has to shout - &ldquo;ALEXA! Switch off the electic pump&rdquo;, not cool. If only, we had an API to that smart switch, I could easily program an ESP8233 board to hit that api whenever my watar alarm alarms. But, they don&rsquo;t. What do we do now ? Of course, we hack the XYZ (Majorly beacuse I&rsquo;ve lost all inspiration to do anything worthwhile and am feeling quite useless.)
+" />
+<meta name="keywords" content="heckeeerrrr" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/hack-smart-homes/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Hacking smart homes">
+<meta property="og:description" content="Backstory There are times when you need your &ldquo;smart&rdquo; devices to obey you. A simple api call is all you need to make them obey you. A simple &ldquo;Hey, turn on&rdquo; command interface but you&rsquo;re denied of it because, eh, APIs are not what there industries are there for. It&rsquo;s the job of open source, right ? Anyway, so we get water supply at some specific hours (very odd hours, I&rsquo;m usually sleeping) and it is required that I turn on the water pump at, say 4 in the morning and turn it off when water is filled. Sounds like an easy job for a smart appliance. We got one. It&rsquo;s called XYZ Company Smart Switch. Now we can easily schedule the water pump to turn on at 4. But what about turning off ? How do we do that ? Getting a simple water alarm was easy but now, whenever water fills up at 5 or sometimes at 6, it wakes up everyone and someone has to shout - &ldquo;ALEXA! Switch off the electic pump&rdquo;, not cool. If only, we had an API to that smart switch, I could easily program an ESP8233 board to hit that api whenever my watar alarm alarms. But, they don&rsquo;t. What do we do now ? Of course, we hack the XYZ (Majorly beacuse I&rsquo;ve lost all inspiration to do anything worthwhile and am feeling quite useless.)
+" />
+<meta property="og:url" content="http://localhost:1313/posts/hack-smart-homes/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/hack-smart-homes/">Hacking smart homes</a>
+  </h1>
+  <div class="post-meta"></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="backstory">Backstory<a href="#backstory" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>There are times when you need your &ldquo;smart&rdquo; devices to obey you.
+A simple api call is all you need to make them obey you.
+A simple &ldquo;Hey, turn on&rdquo; command interface but you&rsquo;re denied of it because, eh, APIs are not what there industries are there for.
+It&rsquo;s the job of open source, right ?
+Anyway, so we get water supply at some specific hours (very odd hours, I&rsquo;m usually sleeping) and it is required that I turn on the water pump at, say 4 in the morning and turn it off when water is filled.
+Sounds like an easy job for a smart appliance. We got one. It&rsquo;s called <em>XYZ Company</em> Smart Switch. Now we can easily schedule the water pump to turn on at 4.
+But what about turning off ? How do we do that ?
+Getting a simple water alarm was easy but now, whenever water fills up at 5 or sometimes at 6, it wakes up everyone and someone has to shout - &ldquo;ALEXA! Switch off the electic pump&rdquo;, not cool.
+If only, we had an API to that smart switch, I could easily program an ESP8233 board to hit that api whenever my watar alarm alarms.
+But, they don&rsquo;t. What do we do now ?
+Of course, we hack the <em>XYZ</em> (Majorly beacuse I&rsquo;ve lost all inspiration to do anything worthwhile and am feeling quite useless.)</p>
+<h1 id="failures">Failures<a href="#failures" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Where do we start ? We have a smart switch, an app to turn it on/off.
+I could pick up an screwdriver and open up the switch and then find out some hardware &hellip;
+NO! I&rsquo;m a CS grad, let&rsquo;s do CS. Open the <em>XYZ</em> app.
+Nice, simple interface, an off/on button for the switch.
+OK, I just need to find out what happens when I tough the on/off button. I just need to emulate that ( and perhaps the login in the app too ).</p>
+<h2 id="burpsuite--mitmproxy">BurpSuite / Mitmproxy<a href="#burpsuite--mitmproxy" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>After reading <a href="https://security.stackexchange.com/questions/60726/how-do-you-capture-all-the-traffic-from-an-android-app">here</a>, <a href="https://gist.github.com/pwlin/8a0d01e6428b7a96e2eb#gistcomment-3607041">here</a>, <a href="https://docs.mitmproxy.org/stable/howto-install-system-trusted-ca-android/">here</a>, <a href="https://treesandrobots.com/2018/03/debug-http-android-app-mitm.html">here</a> and <a href="https://duckduckgo.com/?q=android&#43;setup&#43;transparent&#43;mitmproxy&amp;t=ffab&amp;ia=web">a lot of places</a>
+I was finally able to setup an intercepting proxy to look all the traffic of my android.
+Voah! Just open the app, click the on button and capture the traffic. Simple.
+But all I see after I opened the app was a single POST  request  to login into the app (FIXME: Add picture here)
+where are my on/off commands ?</p>
+<h2 id="adb">ADB<a href="#adb" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Perhaps I can find something out by looking at the data files of the app.
+Fire up <a href="https://developer.android.com/studio/command-line/adb">adb</a> !</p>
+<pre class="language-sh"><code>adb shell
+cd /data/data/com.myxyz.android
+lavender:/data/data/com.myxyz.android # ls databases/
+com.google.android.datatransport.events         google_app_measurement_local.db         mqttAndroidService.db         xyz.db
+com.google.android.datatransport.events-journal google_app_measurement_local.db-journal mqttAndroidService.db-journal xyz.db-journal
+lavender:/data/data/com.myxyz.android #</code></pre><p>All I can see right now is the <code>db</code> files. 😍
+Let&rsquo;s pull those files on my system and view them using a <code>sqlitebrowser</code>
+A simple approach is to first copy all those files to <code>/sdcard</code> and then pull from there</p>
+<pre class="language-sh"><code>1|lavender:/data/data/com.myxyz.android # cp databases /sdcard/hack-xyz -r
+lavender:/data/data/com.myxyz.android # ^D
+lavender:/ $ ^D
+
+~ 1m 35s
+❯ cd ~/Raw_Programs/smart-xyz-motor
+
+~
+❯ adb pull /sdcard/hack-
+/sdcard/hack-xyz/: 50 files pulled, 0 skipped. 6.8 MB/s (7736949 bytes in 1.081s)</code></pre><p>Yo, let&rsquo;s have a look
+<img src="img/sqlite.png" alt="sqlite"> FIXME: Redact</p>
+<p>What the hell is this ? The most I could find was this. What to do of this data ? No idea.
+Says some mqtt address, tried to go to that URL but in vain. It needs some admin creds to login. What to do ?</p>
+<h2 id="reversing-the-apk">Reversing the apk<a href="#reversing-the-apk" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Now it&rsquo;s time to unleash the dragons. I&rsquo;m gonna pull the apk and reverse it.
+It&rsquo;s actually quite simple with android files, right ? RIGHT?
+All I did was to use <a href="https://tools.kali.org/reverse-engineering/dex2jar">dex2jar</a> to convert it to a (broken) jar file and then use <a href="https://java-decompiler.github.io/">jd-gui</a> to look inside it.
+Here&rsquo;s what I saw
+<img src="img/jd-gui.png" alt="jd-gui"> FIXME: Redact apk name</p>
+<p>It&rsquo;s all fun and games until you <em>really</em> have to reverse these horrible <code>a.class, b.class</code> and what not.
+Eh, I might get something if I try something hard, but&hellip; am I going to ? Nah. No. LATER!</p>
+<h2 id="back-to-capturing-traffic">Back to capturing traffic<a href="#back-to-capturing-traffic" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Btw, what the hell was that <a href="/posts/hack-smart-homes/#anchor-link">mqtt</a>  ? Let&rsquo;s duckduckgo.
+Aha, it&rsquo;s some iot standard protocol.
+Basically, there&rsquo;s a <em>broker</em> (or server) and the nodes have to <em>subscribe</em> to a topic on the server and whenever someone sends a message ( <em>publishes</em> ) on a topic, all the <em>subscribers</em> get the message.
+Basically, whatsapp group chat.
+WHAT THE FUCK! MQTT! It is NOT HTTP. I cannot intercept it using burpsuite, mitmproxy or what not I tried.
+Not everything is HTTP damnit.
+I somehow gotta capture raw packets.
+Think, think, think.
+Well, it&rsquo;s simple. I can easily run <code>tcpdump</code> on my router and I&rsquo;ll get all the packets that pass through it.
+Easy ? Let&rsquo;s log in to the router.
+admin:admin, it always is.
+<img src="img/router-login.png" alt="router-login"> FIXME: Redact</p>
+<p>WHAT THE FUCK is that prompt ? Where is SSH ?
+Arggghhhh&hellip;
+Let&rsquo;s try help
+<img src="img/help-router.png" alt="help-router">
+OK, more to go. After fiddling a while, I finally found out the ssh login.
+<img src="img/router-password2.png" alt="router-password2">
+WHAT ! What is that password2 ? Where do I get it ?
+Ahh&hellip; Now, I&rsquo;d have to download the router firmware, unpack it, see if there&rsquo;s something that could help me bypass this.
+KILL MEE&hellip;
+Wait. Why am I doing this ?
+I could simply create a fake wifi hotspot using <code>hostapd</code> and <code>dnsmasq</code> and then connect my android to it then fire up wireshark on my computer. Easy peasy.
+Here&rsquo;s a messy script I wrote for this</p>
+<pre class="language-bash"><code>#!/bin/bash
+# fake_ap: creates a fake ap with name $1
+
+if [[ &#34;$1&#34; == &#34;&#34; ]]; then
+	echo &#34;Need ap name&#34;
+	exit 1
+fi
+
+if [[ &#34;$UID&#34; != 0 ]]; then
+	echo &#34;Need root&#34;
+	exit 1
+fi
+
+AP=&#34;$1&#34;
+IFACE=&#34;net0&#34;
+
+startDNS(){
+	sudo pkill dnsmasq # sorry
+	echo &#34;
+interface=$IFACE
+dhcp-range=192.168.123.10,192.168.123.20,255.255.255.0,5m
+log-queries
+log-dhcp
+	&#34; &gt; dnsmasq.conf
+	sudo	dnsmasq -C dnsmasq.conf
+}
+
+createAP(){
+	sudo iw dev &#34;$IFACE&#34; del # sorry
+	sudo iw phy phy0 interface add &#34;$IFACE&#34; type monitor
+	sudo ip link set &#34;$IFACE&#34; up
+	sudo ip addr add dev &#34;$IFACE&#34; 192.168.123.1/24
+}
+
+startAP(){
+	echo &#34;interface=$IFACE
+driver=nl80211
+ssid=\&#34;$AP\&#34;
+channel=1
+logger_stdout_level=2&#34; &gt; hostapd.conf
+	sudo 	hostapd hostapd.conf
+}
+
+
+createAP
+startDNS
+startAP</code></pre><p><img src="img/needs-internet.png" alt="needs-internet"></p>
+<p>But lo and behold! The <em>XYZ</em> app requires internet to work. Now I somehow need to forward all the packets from my machine to the internet.
+I do have an <a href="https://terabyte.co.in/product/usb-wifi-antenna/">extra wifi card</a>, I could just plug it in and then do the forwarding/routing.
+Doesn&rsquo;t this sound familiar though ? Hmm&hellip; lemme look a while.
+I did read <a href="arch">somewhere in arch wiki</a> that there exists a <a href="https://github.com/lakinduakash/linux-wifi-hotspot">create_ap</a> script that does exactly this.
+Phew&hellip; I&rsquo;m saved.
+After plugging in my second wifi card, I simply did</p>
+<pre class="language-bash"><code>sudo create_ap wlp2s0 wlp0s20f0u2</code></pre><p>And my AP was up.
+Now time to feed the sharks, wiresharks.
+Simply press the <em>Light on</em> button in the <em>XYZ</em> app and look at the wireshark.
+<img src="img/wireshark.png" alt="wireshark"> FIXME: Redact
+Here it is! A thing of beauty. Now, finally I can see the packets.
+If you look at the mqtt protocol used here
+<img src="img/mqtt.png" alt="mqtt"> FIXME: Redact
+You&rsquo;d notice that they aren&rsquo;t really using any sort of authentication. Ha ha ha (hysterically, slowly).</p>
+<p>Now, just need a <em>mqtt-browser</em> kinda thing to browse through the devices. I did find <a href="https://mqtt-explorer.com/">mqtt-explorer</a> but just after opening it showed tons of data and crashed.
+Of course it did. After all we&rsquo;re getting data from who knows where.
+The way mqtt works is, if you suscribe to a topic then you&rsquo;ll get all messages in that topic.
+Now, that explorer seemed to subscibe to <em>ALL</em> the topics, hence the spam.
+Gotta find something command line.
+Not a lot of research is necessary to stumble upon <a href="https://github.com/hivemq/mqtt-cli">mqtt-cli</a>.
+Let&rsquo;s first look at whatever we can look at.</p>
+<pre class="language-sh"><code>mqtt sub --host ip.address.here.ok --topic \# -V 3 </code></pre><p><code>--topic \#</code> basically says to subscribe to all the topics and <code>-V 3</code> mean we want to use <code>mqtt version 3</code>.
+You can do <code>mqtt test</code> to find this out or look at the wireshark.</p>
+<p>Woooaaahhhhhhh!
+Here comes infinite on/off commands from all over the world (or India, idk.)
+FIXME: Insert whatsapp status video</p>
+<p>Cool&hellip; Now, can <em>WE</em> publish something ?
+You bet.
+I even wrote a script to turn my &ldquo;smart&rdquo; switch on/off via command line.</p>
+<pre class="language-bash"><code>#!/bin/bash
+if [[ &#34;$1&#34; == &#34;on&#34; ]]; then
+	mqtt pub --host 12.34.56.789 --topic &#34;blahblahblah/req&#34; --message  000105010001 -V 3
+else
+	mqtt pub --host 12.34.56.789 --topic &#34;blahblahblah/req&#34; --message  000105010000 -V 3
+fi</code></pre><p>Here the <code>--message</code> and <code>--topic</code> part came from the wireshark capture.
+Yes, I can control smart devices of every user on the planet using <em>XYZ</em>&rsquo;s device.
+Farewell, my friend.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/ai-attacks/">
+                <span class="button__icon">←</span>
+                <span class="button__text">AI attacks</span>
+            </a>
+        </span>
+        
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

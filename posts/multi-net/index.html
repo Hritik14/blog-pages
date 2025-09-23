@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Multiple connections - Faster internet ? :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content=" Neo, we must find a faster link, connection to the Matrix is congested. Hurry !
+Kernel supports a magical module, called bonding
+" />
+<meta name="keywords" content="faster internet, fast, fast internet, multipath internet, two connection to internet, multiple connection to internet" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/multi-net/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Multiple connections - Faster internet ?">
+<meta property="og:description" content=" Neo, we must find a faster link, connection to the Matrix is congested. Hurry !
+Kernel supports a magical module, called bonding
+" />
+<meta property="og:url" content="http://localhost:1313/posts/multi-net/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2020-04-20 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/multi-net/">Multiple connections - Faster internet ?</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2020-04-20</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <blockquote>
+<p>Neo, we must find a faster link, connection to the Matrix is congested. Hurry !</p></blockquote>
+<p>Kernel supports a magical module, called <a href="https://en.wikipedia.org/wiki/Link_aggregation#Linux_Bonding_Driver_Modes"><em>bonding</em></a></p>
+<blockquote>
+<p><strong>Bonding</strong>: methods of combining (aggregating) multiple network connections in parallel in order to increase throughput</p></blockquote>
+<p>This seems to be exactly what I need. I&rsquo;ve two ISPs , let&rsquo;s go ahead and connect two of my android devices via <em>USB Tethering</em> and <em>bond</em> both the connections and enter into the matrix!</p>
+<p>Wait&hellip;</p>
+<p>Bonding joins two physical network connections to the <em>same network</em> into 1 logical connection. [<a href="https://bbs.archlinux.org/viewtopic.php?pid=1185083#p1185083">1</a>]</p>
+<p>Ahh.. If only it were the old days, I could just plug in multiple RJ45 cables connected to a single network and increase the throughput but the world has now moved to the Internet and so has the Matrix.
+I must find another way&hellip;</p>
+<hr>
+<h1 id="multipath-routing">Multipath Routing<a href="#multipath-routing" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/Multipath_routing">Multipath routing</a> is the routing technique of using multiple alternative paths through a network, which can yield a variety of benefits such as fault tolerance, increased bandwidth, or improved security.</p></blockquote>
+<p>Appears interesting. Link, try it!</p>
+<p>First, let&rsquo;s connect to a WiFi network and Android USB tethering.</p>
+<pre class="language-sh"><code>$ ip -br address
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+enp1s0           DOWN
+wlp2s0           UP             192.168.43.216/24 fe80::4ca5:1c7a:25de:4552/64
+enp0s20f0u3      UNKNOWN        192.168.42.12/24 fe80::61f1:5894:3e86:3981/64</code></pre><p>Here <code>wlp2s0</code> denotes my wireless <em>interface</em> (the WiFi) and <code>enp0s20f0u3</code> denotes my USB tethered android device&rsquo;s interface.</p>
+<p>Every IP Packet needs to be <em>routed</em> in a <a href="http://linux-ip.net/html/routing-tables.html">routing table</a>.</p>
+<p>We can view the default routing table as:</p>
+<pre class="language-sh"><code>$ ip route
+default via 192.168.42.129 dev enp0s20f0u3 proto dhcp metric 100
+default via 192.168.43.1 dev wlp2s0 proto dhcp metric 600
+192.168.42.0/24 dev enp0s20f0u3 proto kernel scope link src 192.168.42.12 metric 100
+192.168.43.0/24 dev wlp2s0 proto kernel scope link src 192.168.43.216 metric 600</code></pre><p>The IP address after &lsquo;<em>via</em>&rsquo; is the gateway ( say, router&rsquo;s IP ).</p>
+<p>In order to route our packets over two <em>interfaces</em> (USB Tethering and WiFi), declare two new routing tables:</p>
+<pre class="language-sh"><code># echo 200 L1 &gt;&gt; /etc/iproute2/rt_tables
+# echo 201 L2 &gt;&gt; /etc/iproute2/rt_tables</code></pre><p>Numbers 200 and 201 are arbitrary.</p>
+<p>Before proceeding, declare some variables according to the above outputs [<a href="https://lartc.org/howto/lartc.rpdb.multiple-links.html">2</a>]:</p>
+<pre class="language-sh"><code>$ IF1=wlp2s0
+$ IF2=enp0s20f0u3
+$ IP1=192.168.43.216
+$ IP2=192.168.42.12
+$ P1=192.168.43.1
+$ P2=192.168.42.129
+$ P1_NET=192.168.43.216/24
+$ P2_NET=192.168.42.12/24</code></pre><p>Now, populate the routing tables (actual creation) to contain proper interfaces and gateway IPs</p>
+<pre class="language-sh"><code># ip route add $P1_NET dev $IF1 src $IP1 table T1
+# ip route add default via $P1 table T1
+# ip route add $P2_NET dev $IF2 src $IP2 table T2
+# ip route add default via $P2 table T2</code></pre><p>Create rules, so that all connections coming on a interface get answered on the same interface. This is important, if a remote server requests some info via WiFi, you cannot just reply via USB Tethered connection and expect everything to work.</p>
+<pre class="language-sh"><code># ip rule add from $IP1 table T1
+# ip rule add from $IP2 table T2</code></pre><p>Now comes the juicy part. To set up a multipath route.</p>
+<pre class="language-sh"><code>$ ip route add default scope global nexthop via $P1 dev $IF1 weight 1 \
+	    nexthop via $P2 dev $IF2 weight 1</code></pre><p><em>Next hop</em> specifies the next router the packet should <em>hop</em> to. Here, two <code>nexthops</code> imply there are two possibilities with the respective weights.</p>
+<h1 id="tldr">Tl;Dr<a href="#tldr" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>The Machines have written a <a href="https://gist.github.com/Hritik14/021fec2cd9bf8e9a4c0e302ae58d7b32">code to automate all this</a>.<br>
+Beware, it&rsquo;s the machines!</p>
+<h1 id="did-it-work-">Did it work ?<a href="#did-it-work-" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Verify by running <code>watch curl -s ipecho.net/plain</code>
+You <em>should</em> be able to see changing IPs per request.</p>
+<h1 id="downloads">Downloads<a href="#downloads" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>In order to increase download bandwidth, use the awesome tool - <code>aria2</code>
+Find out your internet facing interfaces (say $IF1, $IF2) and issue:</p>
+<pre class="language-sh"><code>aria2c --multiple-interface $IF1,$IF2 https://download.tld/url.ext</code></pre><h1 id="wtf-">WTF ?<a href="#wtf-" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p><strong>1. Internet is slower</strong> <br>
+The above steps roughly <em>split</em> the amount of packets over two interfaces (connections), if one of the connection is very slow, it would slow down everything. To avoid this, increase the weight for the faster connection.</p>
+<p><strong>2. ipecho.net is showing same IP every time in Firefox/Chrome.</strong> <br>
+The culprit could be cached connections or hell lot of other reasons. To verify it&rsquo;s working overall, check your IP on multiple websites (<a href="https://dgg.gg/?q=my&#43;ip">duckduckgo</a>, <a href="https://ipecho.net">ipecho</a>, <a href="https://iplocation.net">iplocation</a> to name a few)</p>
+<p><strong>3. Something else ?</strong><br>
+Follow the white rabbit.</p>
+<h1 id="credits">Credits<a href="#credits" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<ul>
+<li>freenode#netfilter : Awesome people</li>
+<li><a href="https://lartc.org/howto/lartc.rpdb.multiple-links.html">lartc</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Morpheus_%28The_Matrix%29#/media/File:Morpheus.jpg">Morpheus</a></li>
+</ul>
+<hr>
+<p>We&rsquo;re in. I&rsquo;ve to find Trinity.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/secarmy-unintended-ctf/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Grayhat -&gt; Secarmy CTF :: The Unintended Way</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="http://localhost:1313/posts/ai-attacks/">
+                <span class="button__text">AI attacks</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

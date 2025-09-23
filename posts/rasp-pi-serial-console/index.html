@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Rasp Pi Serial Console :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="While working on photos. I plugged in rasp pi to ethernet but it didn&rsquo;t come up in any network scan.
+Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp pi changed their HDMI from mini to micro, and I only have a mini adapter from pi zero.
+" />
+<meta name="keywords" content="serial, raspberry pi, uart" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/rasp-pi-serial-console/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Rasp Pi Serial Console">
+<meta property="og:description" content="While working on photos. I plugged in rasp pi to ethernet but it didn&rsquo;t come up in any network scan.
+Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp pi changed their HDMI from mini to micro, and I only have a mini adapter from pi zero.
+" />
+<meta property="og:url" content="http://localhost:1313/posts/rasp-pi-serial-console/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-08-29 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/rasp-pi-serial-console/">Rasp Pi Serial Console</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-08-29</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>While working on <a href="/posts/photos/">photos</a>. I plugged in rasp pi to ethernet but it
+didn&rsquo;t come up in any network scan.</p>
+<p>Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp pi changed their HDMI from mini to micro, and I only have a mini adapter from pi zero.</p>
+<p>Thankfully, I keep a USB to UART for these situations.</p>
+<p><a href="https://www.raspberrypi.com/documentation/computers/configuration.html#primary-uart">Documentation</a> says that UART should be on GPIO 14 and 15.</p>
+<p><a href="https://pinout.xyz/pinout/uart"><img src="https://raw.githubusercontent.com/pinout-xyz/Pinout.xyz/master/resources/raspberry-pi-pinout.png" alt="pinouts"></a></p>
+<p>I wonder if I should connect the 3.3V/5V pins on my UART bridge at all ? I asked perplexity and it said no.
+Sounds right because the bridge is getting power from USB and rasp pi is already powered.</p>
+<p><img src="../img/pi-uart/uart.jpeg" alt="uart"></p>
+<h2 id="find-the-uart-device-numbers">Find the UART device numbers<a href="#find-the-uart-device-numbers" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<pre class="language-bash"><code>; ls /dev &gt; before
+; ls /dev &gt; after
+; comm -3 before after
+        cu.usbserial-0001
+        tty.usbserial-0001</code></pre><p>Still not working.</p>
+<pre class="language-bash"><code>; picocom -b 115200 /dev/tty.usbserial-0001
+picocom v3.1
+
+port is        : /dev/tty.usbserial-0001
+flowcontrol    : none
+baudrate is    : 115200
+parity is      : none
+databits are   : 8
+stopbits are   : 1
+escape is      : C-a
+local echo is  : no
+noinit is      : no
+noreset is     : no
+hangup is      : no
+nolock is      : no
+send_cmd is    : sz -vv
+receive_cmd is : rz -vv -E
+imap is        :
+omap is        :
+emap is        : crcrlf,delbs,
+logfile is     : none
+initstring     : none
+exit_after is  : not set
+exit is        : no
+
+Type [C-a] [C-h] to see available commands
+Terminal ready</code></pre><p>nothing happens.</p>
+<p>Now I doubt if I enabled the serial console in rasp pi config. Take out sdcard, plug it in on my mac.</p>
+<p>My mac cannot mount ext4 😫</p>
+<pre class="language-bash"><code>/dev/disk6 (internal, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:     FDisk_partition_scheme                        *126.4 GB   disk6
+   1:             Windows_FAT_32 NO NAME                 134.2 MB   disk6s1
+   2:                      Linux                         126.3 GB   disk6s2
+
+
+; sudo file -s /dev/disk6s2
+
+/dev/disk6s2: Linux rev 1.0 ext4 filesystem data, UUID=753de8f8-52e4-4d85-94b7-adad5d75b8b8 (needs journal recovery) (extents) (64bit) (large files) (huge files)
+
+
+; sudo mount -t ext4 /dev/disk6s2 ~/mnt
+mount: exec /Library/Filesystems/ext4.fs/Contents/Resources/mount_ext4 for /Users/neo/mnt: No such file or directory</code></pre><p>Time to power up my Linux.</p>
+<p>My <code>/boot/config.txt</code> had <code>enable_uart=0</code>. Probably this is the <a href="https://www.raspberrypi.com/documentation/computers/config_txt.html#enable_uart">reason uart is not working</a>.</p>
+<p>Note: You need to mount <strong>boot partition</strong> on <code>mountpoint/boot/firmware</code> and root partition at <code>mountpoint/boot</code>. Only boot partition is required anyway.</p>
+<p>Looks like rasp pi 5 has a <a href="https://forums.raspberrypi.com/viewtopic.php?t=358296">dedicated uart</a>.</p>
+<p>As per <a href="https://github.com/raspberrypi/documentation/issues/3239#issuecomment-1819869459">this</a> and <a href="https://pinout.xyz/pinout/uart">this</a> I need to explicitly enable <code>uart0</code> as default uart is debug uart on 3 pin dedicated header (ie not on pin 14 and 15).</p>
+<div class="collapsable-code">
+  <input id="code-1758665511256757000" type="checkbox"  />
+  <label for="code-1758665511256757000"><span class="collapsable-code__title">config.txt</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-text"><code>dtparam=uart0_console   # Enable UART0/ttyAMA0 on GPIO 14 &amp; 15 and make it the console UART</code></pre>
+</div><div class="collapsable-code">
+  <input id="code-1758665511256774000" type="checkbox"  />
+  <label for="code-1758665511256774000"><span class="collapsable-code__title">cmdline.txt</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-text"><code>console=serial0,115200</code></pre>
+</div><p>Showed me a startup output !! but no input yet !</p>
+<pre class="language-text"><code>Terminal ready
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x414fd0b1]
+[    0.000000] Linux version 6.6.31&#43;rpt-rpi-2712 (serge@raspberrypi.com) (gcc-12 (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40) #1 SMP PREEMPT Debian 1:6.6.31-1&#43;rpt1 (2024-05-29)
+[    0.000000] KASLR enabled
+[    0.000000] random: crng init done
+[    0.000000] Machine model: Raspberry Pi 5 Model B Rev 1.0
+[    0.000000] efi: UEFI not found.
+...
+[    3.399570] systemd[1]: Mounted sys-kernel-tracing.mount - Kernel Trace File System.
+[    3.408185] systemd[1]: Finished fake-hwclock.service - Restore / save the current clock.
+[    3.416587] systemd[1]: Started systemd-journald.service - Journal Service.</code></pre><p>I also saw a /boot/dietpi-wifi.txt file, so lets put in the wifi creds there.</p>
+<p>On serial console, it shows:</p>
+<pre class="language-text"><code> ─────────────────────────────────────────────────────
+ DietPi v9.6.1 : 08:32 - Thu 08/21/25
+ ─────────────────────────────────────────────────────
+ - LAN IP : 192.168.1.254 (wlan0)
+
+ Please hit &lt;return&gt; to login</code></pre><p>Although nothing happens when I hit return.
+Anyway, I can see its connected to the wifi. So, ssh should work.</p>
+<p>And yes! it does.</p>
+<pre class="language-bash"><code>; ssh dietpi@192.168.1.254
+dietpi@192.168.1.254&#39;s password:
+Linux DietPi 6.6.31&#43;rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.6.31-1&#43;rpt1 (2024-05-29) aarch64</code></pre><p>Q: So why didn&rsquo;t it show up on ethernet scan then ?
+A: <code>hotplug</code> was disabled for ethernet. Might&rsquo;ve worked if I booted rasp pi with ethernet cable connected.</p>
+<p>Via ssh I can see that <code>serial-getty</code> is disabled on serial0.</p>
+<pre class="language-bash"><code>○ serial-getty@serial0.service - Serial Getty on serial0
+     Loaded: loaded (/lib/systemd/system/serial-getty@.service; disabled; preset: enabled)
+     Active: inactive (dead)
+       Docs: man:agetty(8)
+             man:systemd-getty-generator(8)
+             https://0pointer.de/blog/projects/serial-console.html
+dietpi@DietPi:~$ sudo systemctl start serial-getty@serial0</code></pre><p>After enabling it, I&rsquo;ve the console on my UART:</p>
+<pre class="language-bash"><code> ─────────────────────────────────────────────────────
+ DietPi v9.6.1 : 08:32 - Thu 08/21/25
+ ─────────────────────────────────────────────────────
+ - LAN IP : 192.168.1.254 (wlan0)
+
+ Please hit &lt;return&gt; to login
+
+
+Debian GNU/Linux 12 DietPi ttyAMA0
+
+DietPi login: dietpi
+Password:
+Linux DietPi 6.6.31&#43;rpt-rpi-2712 #1 SMP PREEMPT Debian 1:6.6.31-1&#43;rpt1 (2024-05-29) aarch64</code></pre><p><img src="../img/pi-uart/setup.jpeg" alt="setup"></p>
+<p>I would&rsquo;ve saved some headache <a href="https://github.com/MichaIng/DietPi/discussions/7684">if login shell was enabled</a>.<br>
+I must&rsquo;ve disabled serial on first boot, note to self: <a href="https://github.com/MichaIng/DietPi/blob/1f98f96f57787d8c3df0894051234d093d6845ce/dietpi.txt#L65-L67">keep CONFIG_SERIAL_CONSOLE_ENABLE=1 turned on</a>.</p>
+<h2 id="after-system-upgrade">After system upgrade<a href="#after-system-upgrade" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Turns out, I could&rsquo;ve only enabled <code>serial-getty@ttyAMA0.service</code> and
+set <code>console=ttyAMA0,115200</code> in cmdline.txt</p>
+<pre class="language-bash"><code>dietpi@DietPi:~$ sudo systemctl start serial-getty@ttyAMA0.service
+Failed to start serial-getty@ttyAMA0.service: Unit serial-getty@ttyAMA0.service is masked.
+dietpi@DietPi:~$ sudo systemctl unmask serial-getty@ttyAMA0.service
+Removed &#34;/etc/systemd/system/serial-getty@ttyAMA0.service&#34;.
+dietpi@DietPi:~$ sudo systemctl start serial-getty@ttyAMA0.service
+dietpi@DietPi:~$ sudo systemctl enable serial-getty@ttyAMA0.service
+Created symlink /etc/systemd/system/getty.target.wants/serial-getty@ttyAMA0.service → /etc/systemd/system/serial-getty@.service.</code></pre><p>Q: So, why dtparam=uart0 was required earlier but not now ?<br>
+A: because new firmwares have fallback - if debug uart is not connected, it falls back to uart0 on GPIO 14/15</p>
+<h2 id="raspberry-os-bug">Raspberry OS bug<a href="#raspberry-os-bug" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>I stumbled upon a slight frustration.</p>
+<p>Usually, serial0 -&gt; ttyAMA0 mapped by the OS to abstract hardware specific names.</p>
+<p>However, I wrote <code>console=serial0,115200</code> in cmdline.txt, it showed <code>ttyAMA0</code> in <code>dmesg</code></p>
+<pre class="language-bash"><code>dietpi@DietPi:~$ dmesg | grep uart
+
+[    0.000000] Kernel command line: reboot=w coherent_pool=1M 8250.nr_uarts=1 pci=pcie_bus_safe cgroup_disable=memory numa_policy=interleave nvme.max_host_mem_size_mb=0  numa=fake=8 system_heap.max_order=0 smsc95xx.macaddr=2C:CF:67:66:EE:A5 vc_mem.mem_base=0x3fc00000 vc_mem.mem_size=0x40000000  root=PARTUUID=d1fb42d0-02 rootfstype=ext4 rootwait net.ifnames=0 logo.logo console=ttyAMA0,115200 console=tty1</code></pre><p>and <code>/dev/serial0</code> is never created at all. So, enabling systemd for it doesn&rsquo;t work, but works for <code>/dev/ttyAMA0</code>.</p>
+<p>Turns out, it&rsquo;s a <a href="https://github.com/raspberrypi/bookworm-feedback/issues/401">bug</a> in Raspberry OS and was <a href="https://github.com/MichaIng/DietPi/discussions/7684#discussioncomment-14178728">present in dietpi</a> at the time of writing this.</p>
+<h2 id="summing-up">Summing up<a href="#summing-up" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ol>
+<li>config.txt: <code>enable_uart=1</code> enables uart functionality</li>
+<li>pis have <a href="https://pinout.xyz/pinout/uart">multiple uarts</a>. uart0 is pin 14 and 15.</li>
+<li>On <a href="https://bugs.launchpad.net/ubuntu/&#43;source/linux-raspi/&#43;bug/2101104">Raspberry Pi 5 with Raspberry Pi OS Bookworm</a> default uart is debug uart on 3 pin dedicated header</li>
+<li>config.txt: dtparam=uart0=on : enable UART0 on GPIO 14/15 and makes serial0 -&gt; uart0</li>
+<li>config.txt: dtparam=uart0_console : uart0 is a console device</li>
+<li>Newer firmwares have fallback - if debug uart is not connected, it falls back to uart0 on GPIO 14/15, so above config.txt changes are not needed.</li>
+<li>cmdline.txt: <code>console=serial0,115200</code> enables serial console on serial0 (serial0 -&gt; uart0 -&gt; GPIO 14/15)</li>
+<li><code>DietPi 6.12.34+rpt-rpi-2712</code> does not have /dev/serial0 -&gt; /dev/ttyAMA0 mapped, as seen in <a href="/posts/rasp-pi-serial-console/#raspberry-os-bug">dmesg above</a>. This is a <a href="https://github.com/raspberrypi/bookworm-feedback/issues/401">bug</a>.</li>
+<li>systemctl enable serial-getty@ttyAMA0.service : enables serial console on ttyAMA0 ( serial0 -&gt; uart0 == ttyAMA0 )</li>
+<li>Ideally, above line would be: <code>systemctl enable serial-getty@serial0.service</code></li>
+<li>Use <code>picocom</code> instead of <code>minicom</code></li>
+</ol>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/immich/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Immich on Raspberry Pi 5</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="http://localhost:1313/posts/photos/">
+                <span class="button__text">Photos</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

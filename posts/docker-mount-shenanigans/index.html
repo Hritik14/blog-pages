@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Docker mount shenanigans :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Works Problem:
+Want to get everything under xx8: in immich as external library BUT immich data dir is also under xx8 ie xx8/immich don&rsquo;t want to get that data dir as external library as it contains thumbnails already
+" />
+<meta name="keywords" content="" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/docker-mount-shenanigans/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Docker mount shenanigans">
+<meta property="og:description" content="Works Problem:
+Want to get everything under xx8: in immich as external library BUT immich data dir is also under xx8 ie xx8/immich don&rsquo;t want to get that data dir as external library as it contains thumbnails already
+" />
+<meta property="og:url" content="http://localhost:1313/posts/docker-mount-shenanigans/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-09-03 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/docker-mount-shenanigans/">Docker mount shenanigans</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-09-03</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h2 id="works">Works<a href="#works" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Problem:</p>
+<p>Want to get everything under xx8: in immich as external library
+BUT immich data dir is also under xx8 ie xx8/immich
+don&rsquo;t want to get that data dir as external library as it contains thumbnails already</p>
+<p>Best possible way:
+External lib -&gt; Add exclusion pattern -&gt; /home/user/drive/xx8/immich/**</p>
+<p>services:
+immich-server:
+container_name: immich_server
+image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+# extends:
+#   file: hwaccel.transcoding.yml
+#   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+volumes:
+- ./mounts/xx8/immich:/data:rw
+- ./mounts/:/home/user/drive:ro
+- /home/user/drive/xx8/immich # ensure generated thumbnails are not indexed again
+- ${THUMB_LOCATION}:/data/thumbs
+- /etc/localtime:/etc/localtime:ro</p>
+<p>dietpi@DietPi:~/immich$ sudo docker compose exec immich-server bash
+root@42579023a9d8:/usr/src/app# mount | grep xx8
+xx8: on /data type fuse.rclone (rw,nosuid,nodev,relatime,user_id=1000,group_id=1000,allow_other)
+xx8: on /home/user/drive/xx8 type fuse.rclone (ro,nosuid,nodev,relatime,user_id=1000,group_id=1000,allow_other)
+/dev/root on /home/user/drive/xx8/immich type ext4 (rw,noatime,lazytime)</p>
+<p>dietpi@DietPi:~/immich$ sudo docker  inspect immich_server  | jq &lsquo;.[0].Mounts&rsquo;
+[
+{
+&ldquo;Type&rdquo;: &ldquo;bind&rdquo;,
+&ldquo;Source&rdquo;: &ldquo;/home/dietpi/immich/thumbs&rdquo;,
+&ldquo;Destination&rdquo;: &ldquo;/data/thumbs&rdquo;,
+&ldquo;Mode&rdquo;: &ldquo;rw&rdquo;,
+&ldquo;RW&rdquo;: true,
+&ldquo;Propagation&rdquo;: &ldquo;rprivate&rdquo;
+},
+{
+&ldquo;Type&rdquo;: &ldquo;bind&rdquo;,
+&ldquo;Source&rdquo;: &ldquo;/etc/localtime&rdquo;,
+&ldquo;Destination&rdquo;: &ldquo;/etc/localtime&rdquo;,
+&ldquo;Mode&rdquo;: &ldquo;ro&rdquo;,
+&ldquo;RW&rdquo;: false,
+&ldquo;Propagation&rdquo;: &ldquo;rprivate&rdquo;
+},
+{
+&ldquo;Type&rdquo;: &ldquo;bind&rdquo;,
+&ldquo;Source&rdquo;: &ldquo;/home/dietpi/immich/mounts/xx8/immich&rdquo;,
+&ldquo;Destination&rdquo;: &ldquo;/data&rdquo;,
+&ldquo;Mode&rdquo;: &ldquo;rw&rdquo;,
+&ldquo;RW&rdquo;: true,
+&ldquo;Propagation&rdquo;: &ldquo;rprivate&rdquo;
+},
+{
+&ldquo;Type&rdquo;: &ldquo;volume&rdquo;,
+&ldquo;Name&rdquo;: &ldquo;035a4ca4e10dcee01dab7ba2bb3fa7a219696327ecd4e97cea725947cd8fec6b&rdquo;,
+&ldquo;Source&rdquo;: &ldquo;/mnt/dietpi_userdata/docker-data/volumes/035a4ca4e10dcee01dab7ba2bb3fa7a219696327ecd4e97cea725947cd8fec6b/_data&rdquo;,
+&ldquo;Destination&rdquo;: &ldquo;/home/user/drive/xx8/immich&rdquo;,
+&ldquo;Driver&rdquo;: &ldquo;local&rdquo;,
+&ldquo;Mode&rdquo;: &ldquo;z&rdquo;,
+&ldquo;RW&rdquo;: true,
+&ldquo;Propagation&rdquo;: &quot;&quot;
+},
+{
+&ldquo;Type&rdquo;: &ldquo;bind&rdquo;,
+&ldquo;Source&rdquo;: &ldquo;/home/dietpi/immich/mounts&rdquo;,
+&ldquo;Destination&rdquo;: &ldquo;/home/user/drive&rdquo;,
+&ldquo;Mode&rdquo;: &ldquo;ro&rdquo;,
+&ldquo;RW&rdquo;: false,
+&ldquo;Propagation&rdquo;: &ldquo;rprivate&rdquo;
+}
+]</p>
+<h2 id="doesnt-work">Doesn&rsquo;t work<a href="#doesnt-work" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>services:
+immich-server:
+container_name: immich_server
+image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+# extends:
+#   file: hwaccel.transcoding.yml
+#   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+volumes:
+- ./mounts/xx8/immich:/data:rw
+- ./mounts/:/home/user/drive:ro
+- ./empty:/home/user/drive/xx8/immich # ensure generated thumbnails are not indexed again
+- ${THUMB_LOCATION}:/data/thumbs
+- /etc/localtime:/etc/localtime:ro</p>
+<p>dietpi@DietPi:~/immich$ ls -ld empty/
+drwxr-xr-x 2 dietpi dietpi 4096 Sep  1 12:35 empty/</p>
+<p>&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash; Weirdo &mdash;&mdash;&mdash;&mdash;</p>
+<p>Doing either of two works now.
+Hypothesis: if it&rsquo;s a FUSE fs and fs is NOT cached yet then</p>
+<pre><code>  - ./mounts/:/home/user/drive:ro
+  - ./empty:/home/user/drive/xx8/immich
+</code></pre>
+<p>./empty mount does not work and contents for /home/user/drive/xx8/immich are fetched from fuse -&gt; /mounts/xx8/immich</p>
+<p>After FUSE fs is cached ie docker knows /mounts/xx8/immich exists, then ./empty mount is used for /home/user/drive/xx8/immich</p>
+<hr>
+<p>once i did
+services:
+immich-server:
+container_name: immich_server
+image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+# extends:
+#   file: hwaccel.transcoding.yml
+#   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+volumes:
+- ./mounts/xx8/immich:/data:rw
+- ./mounts/:/home/user/drive:ro
+- ./empty:/home/user/drive/xx8/immich</p>
+<p>then i did
+services:
+immich-server:
+container_name: immich_server
+image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+# extends:
+#   file: hwaccel.transcoding.yml
+#   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
+volumes:
+- ./mounts/xx8/immich:/data:rw
+- ./mounts/:/home/user/drive:ro
+- /home/user/drive/xx8/immich</p>
+<p>but  /home/user/drive/xx8/immich still points to empty, why</p>
+<p>doing thsi solved it
+docker compose down -v &ndash;remove-orphans
+why ?</p>
+<p>dietpi@DietPi:<del>/immich$ sudo docker compose down -v
+[+] Running 6/6
+✔ Container immich_machine_learning  Removed               0.0s
+✔ Container immich_server            Removed               0.0s
+✔ Container immich_postgres          Removed               0.0s
+✔ Container immich_redis             Removed               0.0s
+✔ Volume immich_model-cache          Removed               0.0s
+✔ Network immich_default             Removed               0.3s
+dietpi@DietPi:</del>/immich$</p>
+<p>&ndash;force-recreate is not important but <code>down -v</code> is important.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/rescue-me/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Rescue me always</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="http://localhost:1313/posts/immich/">
+                <span class="button__text">Immich on Raspberry Pi 5</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

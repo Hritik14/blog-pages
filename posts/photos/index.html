@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Photos :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="I want to store photos. GDrive is ok but expensive. iCloud is more of a sync service and could be pain later on (as apple is).
+" />
+<meta name="keywords" content="photos, storage, photoprism, immich, drive, backblaze" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/photos/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Photos">
+<meta property="og:description" content="I want to store photos. GDrive is ok but expensive. iCloud is more of a sync service and could be pain later on (as apple is).
+" />
+<meta property="og:url" content="http://localhost:1313/posts/photos/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-08-28 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/photos/">Photos</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-08-28</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>I want to store photos. GDrive is ok but expensive. iCloud is more of a sync service and could be pain later on (as apple is).</p>
+<p>Tried photoprism. It&rsquo;s nice with all mainstream features.
+It&rsquo;d need a storage server. After quite some research, backblaze felt like a good fit at 6$/mo/TB. Good price.</p>
+<p>Current setup:
+browser -&gt; photoprsim -&gt; backblaze</p>
+<p>Photoprism is hosted on oracle cloud always free arm instance.</p>
+<p>Above setup is for non sensitive photos. Something that sharing with oracle is not a very big problem.
+I need something for private / personal. They cannot be on the same server.</p>
+<p>Recently heard of tailscale, good vpn service. I could setup personal wireguard but that&rsquo;ll require another vps (because cgnat). As wireguard is e2e, I could use tailscale instead of a vps for wireguard.</p>
+<p>I&rsquo;ve a Raspberry Pi.</p>
+<p>Idea:</p>
+<p>Browser -&gt; tailscale -&gt; raspberry pi (photoprism) -&gt; backblaze</p>
+<p>Q: Why not an SSD with raspberry pi ?<br>
+A: I&rsquo;m trying out backblaze. If I directly connect SSD, I&rsquo;ll have only one copy of my photos on SSD. Not a good idea.
+Right now, I&rsquo;ve an SSD and backblaze. Not enough for 3-2-1 rule. Perhaps, I&rsquo;ll get an HDD for offsite backup, but that&rsquo;s for later.</p>
+<h2 id="pricing--month--200gb">Pricing / month / 200GB<a href="#pricing--month--200gb" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<table>
+  <thead>
+      <tr>
+          <th>Service</th>
+          <th>Price</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Gdrive</td>
+          <td>210 INR</td>
+      </tr>
+      <tr>
+          <td>Backblaze</td>
+          <td>6 * 118% = 7.08 USD = 618.58 / 2TB =&gt; 123.8 INR</td>
+      </tr>
+      <tr>
+          <td>iCloud</td>
+          <td>219 INR</td>
+      </tr>
+  </tbody>
+</table>
+<p>Here&rsquo;s how it compares for increased storage:</p>
+<iframe src="https://www.desmos.com/calculator/cxz8xf8swy?embed" width="500" height="500" style="border: 1px solid #ccc" frameborder=0></iframe>
+<p>Tried <a href="https://github.com/photoprism/photoprism">photoprism</a> for a few days. Then wanted to share a library. User creation is paywalled. I can create user from cli though.
+Still, sharing to one specific user with a link looks tricky. Public link is good.</p>
+<p>Looking for this, I found <a href="https://github.com/immich-app/immich">immich</a>. Instantly loved it ! The UI is so clean.
+Installed immich on raspberry pi. Keeping thumbnails locally on rasp pi and originals on backblaze.</p>
+<p>Mount with rclone:</p>
+<pre class="language-text"><code>rclone mount b2:/rick-private-photos bb2 --vfs-cache-mode full --allow-other --daemon</code></pre><p>Different thumbnail dir:</p>
+<pre class="language-text"><code>    volumes:
+      - ${UPLOAD_LOCATION}:/data
+      - ${THUMB_LOCATION}:/data/thumbs</code></pre><p>It&rsquo;s easy to set this up as systemd unit in case of reboot. Here&rsquo;s <a href="https://github.com/Hritik14/immich">my config</a>.</p>
+<p>The iOS app is fantastic. It has ability to choose different server url on home wifi. So,<br>
+Home wifi -&gt; directly connect to rasp pi<br>
+Internet -&gt; Use tailscale IP for rasp pi</p>
+<p>This keeps my immich server non exposed to the internet.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/rasp-pi-serial-console/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Rasp Pi Serial Console</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="http://localhost:1313/posts/add-to-prompt/">
+                <span class="button__text">Add to your system prompt</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

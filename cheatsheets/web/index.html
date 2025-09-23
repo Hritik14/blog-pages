@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Web cheatsheet :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="You can send postMessage to any window, even if it&rsquo;s a different origin.
+User input in document.querySelector can enable to select malicious item using nth-child
+" />
+<meta name="keywords" content="web, ctf" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/cheatsheets/web/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Web cheatsheet">
+<meta property="og:description" content="You can send postMessage to any window, even if it&rsquo;s a different origin.
+User input in document.querySelector can enable to select malicious item using nth-child
+" />
+<meta property="og:url" content="http://localhost:1313/cheatsheets/web/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-06-28 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/cheatsheets/web/">Web cheatsheet</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-06-28</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>You can send <code>postMessage</code> to any window, even if it&rsquo;s a different origin.</p>
+<p>User input in <code>document.querySelector</code> can enable to select malicious item using <code>nth-child</code></p>
+<p>SOP does not block access to <code>window.frames.length</code> (to do <code>postMessage</code>) to a different origin.</p>
+<p>Blob documents (data:text/html, &hellip;)created from null origins are run in isolated process for security [ONLY IN CHROME]</p>
+<p><code>==</code> converts type to match. ie <code>e.data == 'blob loaded'</code> will take long time if e.data is not string and conversion is costly</p>
+<p><code>window[0]</code> is same as <code>window.frames[0]</code> is same as <code>document.querySelectorAll('iframe')[0].contentWindow</code></p>
+<p><code>origin</code> and <code>location.href</code> can be very different. Eg: sandboxed iframe has <code>null</code> origin but <code>location.href</code> is <code>correct url</code></p>
+<h2 id="prototype-pollution">Prototype pollution<a href="#prototype-pollution" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ol>
+<li><code>__proto__</code> is same as <code>constructor.prototype</code></li>
+</ol>
+<h2 id="regex">Regex<a href="#regex" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ol>
+<li><code>/token/g</code>.test(target) cannot be used multiple times on different targets. It maintains <code>lastIndex</code> of last match and <strong>restarts from there</strong>. ie if <code>target=&quot;token&quot;</code>, it will match first time, then set index to <code>5</code> and start match from there, matched again against same <code>token</code>, it will return false</li>
+</ol>
+<h2 id="resources">Resources<a href="#resources" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p><a href="https://github.com/RenwaX23/XSS-Payloads/blob/master/Without-Parentheses.md">https://github.com/RenwaX23/XSS-Payloads/blob/master/Without-Parentheses.md</a></p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

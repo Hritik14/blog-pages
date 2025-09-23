@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Immich on Raspberry Pi 5 :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="I chose immich for photos, but the story doesn&rsquo;t end there.
+I&rsquo;ve had multiple cloud storage and photos spread across them. There&rsquo;s no unified place to view them apart from my cold storage backups.
+" />
+<meta name="keywords" content="photos, storage, photoprism, immich, drive, backblaze" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/posts/immich/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Immich on Raspberry Pi 5">
+<meta property="og:description" content="I chose immich for photos, but the story doesn&rsquo;t end there.
+I&rsquo;ve had multiple cloud storage and photos spread across them. There&rsquo;s no unified place to view them apart from my cold storage backups.
+" />
+<meta property="og:url" content="http://localhost:1313/posts/immich/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-09-03 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/immich/">Immich on Raspberry Pi 5</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-09-03</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>I chose immich for <a href="/posts/photos/">photos</a>, but the story doesn&rsquo;t end there.</p>
+<p>I&rsquo;ve had multiple cloud storage and photos spread across them. There&rsquo;s no unified place to view them apart from my cold storage backups.</p>
+<p>Immich solves this by having <em>external library</em> sources. I can mount any directory as an external library,
+but my photos are not in a directory, they&rsquo;re in multiple cloud storages.</p>
+<h2 id="fuse">FUSE<a href="#fuse" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Meet FUSE: Filesystem in Userspace.<br>
+It can mount anything as a filesystem. You could mount your thought as a filesystem,
+if you so desired.</p>
+<p>But, 10 cloud providers have 100 different APIs to interact with objects (or files) stored in them.</p>
+<h2 id="rclone">RClone<a href="#rclone" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Meet rclone: a swiss army knife for cloud storage. It can interact with nearly any cloud storage. Copy, sync or even
+mount (using fuse) your cloud storage on a directory.</p>
+<p>Using rclone, is as simple as <code>rclone mount google-drive:pics-dir /mnt/pics</code> and then browse <code>/mnt/pics</code> to access google drive. How cool is that ?</p>
+<!-- found a bug in rclone and fixed it: https://github.com/rclone/rclone/pull/8746#issuecomment-3241589513 -->
+<h2 id="immich">Immich<a href="#immich" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>Now back to immich. Since, I can have all cloud storages as directories, I can have them as external libraries in immich,
+and it becomes a one-view of all my photos.</p>
+<p>I&rsquo;ve immich hosted on my raspberry pi. It&rsquo;s quite slow, immich says it&rsquo;s <a href="https://immich.app/docs/FAQ/#why-is-immich-slow-on-low-memory-systems-like-the-raspberry-pi">because of machine learning</a>.
+So, obviously, they built a way to use a different machine for running machine learning models. Now, I can have my
+mac running machine learning models, and my raspberry pi running immich.</p>
+<p>Yet, it feels slow. Thumbnail generation takes quite some time on rasp pi. Why can&rsquo;t I distribute the load across multiple devices ?<br>
+As it turns out, <a href="https://github.com/immich-app/immich/discussions/15085#discussioncomment-13102618">I can</a>, so <a href="https://github.com/Hritik14/immich">I did</a>.<br>
+I just needed to make all mounts, rasp pi postgres and redis accessible to my new worker device and run immich as usual.
+Immich provides a <code>IMMICH_WORKERS_EXCLUDE: 'api'</code> to disable loading a webUI, since I don&rsquo;t need it on a worker device.</p>
+<p>The hardest part was to access the fuse mounts on my worker Mac (meanwhile being seamless in linux).<br>
+There&rsquo;s <a href="https://macfuse.github.io/">macfuse</a> and <a href="https://www.fuse-t.org/">fuse-t</a> (both closed source as of now) for fuse implementations on Mac.<br>
+Even after mounting with fuse, macos wouldn&rsquo;t let me access the directory. I had to <a href="https://forum.rclone.org/t/operation-not-permitted-on-rclone-mount-on-macos/52416/2?u=hritik">allow full disk access</a> for iterm2
+for it to work.</p>
+<p>Immich docker container kept on crashing for some reason. The container became unresponsive and I had to restart colima for it to respond.
+Turned out, it was out of memory error, and simply increasing colima memory worked. Colima by default allocates very little
+memory to the VM.</p>
+<pre class="language-bash"><code>colima start --cpu 12 --memory 10G</code></pre><p>My docker is now not using enough resources. So, I&rsquo;ve increased concurrency count in immich to 220.
+There were plenty of redis io errors, so I moved redis from rasp pi to my macbook pro.</p>
+<p>Important: The compose file on mac didn&rsquo;t have <code>depends_on</code> for redis and it was causing timeout with redis connection (race condition maybe?).
+Added <code>depends_on</code> for redis and flushed redis entirely with following on my mac</p>
+<pre class="language-bash"><code>docker exec immich_redis redis-cli FLUSHALL</code></pre><p>Now mac&rsquo;s docker cpu usage seems to be increasing. But probably I can push it. Lets try 500.
+Now cpu load is increasing but worker still throwing many redis timeout errors</p>
+<p>As per <a href="https://www.reddit.com/r/immich/comments/1kvvvu3/immich_server_error_error_connect_etimedout_at/">https://www.reddit.com/r/immich/comments/1kvvvu3/immich_server_error_error_connect_etimedout_at/</a>
+I&rsquo;m recreating colima complety. Deleted old vm and creatin new</p>
+<pre class="language-bash"><code>; colima delete
+; colima start --cpu 14 --memory 12 --disk 100                                                                  [NORMAL]</code></pre><p>Also did the following as redis asked:</p>
+<pre class="language-text"><code>colima ssh
+echo &#39;vm.overcommit_memory = 1&#39; | sudo tee -a /etc/sysctl.conf</code></pre><p>still timeout errors. Deciding to dump it all and run immich completely on my mac.</p>
+<p>fuse-t on mac seems to have this problem, whenever network goes down, the parent directory of mounted directory becomes
+unresponsive, no ls, no nothing.
+So earlier, I had <code>thumbs</code> -&gt; rasp pi -&gt; <code>thumbs</code>, now I&rsquo;m keeping <code>thumbs</code> on mac as well.
+Entire immich stack on mac.</p>
+<p>Emmich crashed my mac !! Needed a full force reboot.</p>
+<p>With entire setup on mac, thumbnail generation seems to have beed extremely fast. I&rsquo;ve 200 set at concurrency for thubnail
+generation.
+I&rsquo;m not sure if it&rsquo;s actually fast or not, a lot of thumbnails seems to have been generated but the UI is slow so
+it doesn&rsquo;t show everythnig.
+Prbably it has to do with 200 concurrency. I&rsquo;ll change it to 50
+With 50, it has completed all thumbnail generation insanely fast ! (Around 10-15 minutes or so)</p>
+<p>Immich dashboard says I have 8k photos but thumbnails directory only has 800 files. Something is wrong.
+I did not not the extract metadata. Running it now with 50  workers</p>
+<p>I had a lot of these errors:</p>
+<pre class="language-text"><code>Thumbnail generation failed for asset</code></pre><p>According to <a href="https://www.answeroverflow.com/m/1372593864963002531">this</a>. So the culprit is metadata extraction.</p>
+<blockquote>
+<p>It&rsquo;s no worry, just wanted to raise awareness if anyone else is having the issue. Thumbnail generation will fail if metadata extraction hasn&rsquo;t been completed first</p></blockquote>
+<p>It does make sense, since photos were not showing on the timeline too.</p>
+<p>Trying again with:</p>
+<p>50 workers, extract metadata -&gt; 50 workers thumbnail generation</p>
+<p>hell, lets do 100 both, 250 actually, lets do 500. at 500 cpu usage was low but colima became unresponsive.
+Geting back to 250. 250 works good with the container. usage is still low, but i guess the stats are wrong
+or perhaps it has to do with inodes etc and not cpu/memory.
+It&rsquo;s morning now and I have 2k thubnails, still not 8k as it says in the settings.</p>
+<p>Next plan: keep 12 concurrency only, and start generating metadata -&gt; thumbnails overnight.</p>
+<p>Its been 2 nights, and now immich UI is stuck when I open the browser. I give up on mac VMs, time to boot up my
+old linux laptop and run it on that.</p>
+<p>I&rsquo;ve set 10-10 workers for thumbnail generation and metadata extraction on my linux PC.
+I&rsquo;ll go sleep now, let&rsquo;s see tomorrow
+It seems to have completed without any problems at all. No headache and it just worked.</p>
+<p>I&rsquo;ve moved my <code>thumbs</code> to cloud as well and mounted it with very long vfs cache expiration:</p>
+<pre class="language-bash"><code>      CACHE_DIR=/home/hritik/Media/cache/rclone
+      rclone mount xx8:/immich/thumbs thumbs \
+          --allow-other \
+          --vfs-cache-mode minimal \
+          --vfs-cache-mode full \
+          --vfs-cache-min-free-space 10G   \
+          --vfs-cache-max-age 8760h \
+          --daemon \
+          --cache-dir $CACHE_DIR</code></pre><p>This essentially serves as a directory that auto syncs with remote. Since its a
+mount, it will ask remote for any new files and upload added files but because
+it has a very long vfs cache age, it will keep all downloaded assets.</p>
+<p>I already had some objects in <code>thumbs</code>, to fetch them the first time, I can</p>
+<pre class="language-bash"><code>fd --print0 | xargs -0 -P 5 -n 20 file</code></pre><p>or just use immich as usual and it will fetch on need basis.</p>
+<h2 id="future-thoughts">Future thoughts<a href="#future-thoughts" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>This makes me think, why can&rsquo;t we do this for everything ?<br>
+If have 2 rasp pis, 2 laptops, 1 cloud computer, why can&rsquo;t
+I combine them all and get a one big computer ? It sounds a bit like kubernetes but I need:</p>
+<ol>
+<li>Fault tolerance - if a machine goes does, my system should still work.</li>
+<li>NAT tunnels - all of my devices except those on cloud are NATed.</li>
+<li>Intelligent task allocation - resource intensive tasks should be allocated to the machine with the most free resources.</li>
+</ol>
+<p><a href="https://iofog.org/">Eclipse ioFog</a> looks like a good candidate (a sucessor to <a href="https://github.com/eclipse-fog05/fog05">Fog05</a> perhaps)</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        <span class="button previous">
+            <a href="http://localhost:1313/posts/docker-mount-shenanigans/">
+                <span class="button__icon">←</span>
+                <span class="button__text">Docker mount shenanigans</span>
+            </a>
+        </span>
+        
+        
+        <span class="button next">
+            <a href="http://localhost:1313/posts/rasp-pi-serial-console/">
+                <span class="button__text">Rasp Pi Serial Console</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

