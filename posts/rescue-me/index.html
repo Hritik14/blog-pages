@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   
     <title>Rescue me always :: </title>
   
@@ -11,7 +11,7 @@
 
   <meta name="robots" content="noodp" />
 
-<link rel="canonical" href="http://localhost:1313/posts/rescue-me/" />
+<link rel="canonical" href="https://hritik.sh/posts/rescue-me/" />
 
 
 
@@ -23,15 +23,15 @@
   
   
   
-  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+  <link rel="stylesheet" href="https://hritik.sh/styles.css">
 
 
 
-<link rel="stylesheet" href="http://localhost:1313/style.css">
+<link rel="stylesheet" href="https://hritik.sh/style.css">
 
 
 
-  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+  <link rel="shortcut icon" href="https://hritik.sh/favicon.png">
 
 
 
@@ -48,11 +48,11 @@
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Rescue me always">
 <meta property="og:description" content="My latest arch update broke system boot and plugging in a pen drive is too much work, so I installed grml on my local hard disk partition. Post also explores how live boot works." />
-<meta property="og:url" content="http://localhost:1313/posts/rescue-me/" />
+<meta property="og:url" content="https://hritik.sh/posts/rescue-me/" />
 <meta property="og:site_name" content="" />
 
   
-    <meta property="og:image" content="http://localhost:1313/favicon.png">
+    <meta property="og:image" content="https://hritik.sh/favicon.png">
   
 
 <meta property="og:image:width" content="1200">
@@ -187,7 +187,7 @@
     
 <article class="post">
   <h1 class="post-title">
-    <a href="http://localhost:1313/posts/rescue-me/">Rescue me always</a>
+    <a href="https://hritik.sh/posts/rescue-me/">Rescue me always</a>
   </h1>
   <div class="post-meta"><time class="post-date">2025-09-14</time></div>
 
@@ -219,8 +219,8 @@ Since I just used <code>grml</code> via a pendrive, can I have it boot from the 
 <p>Well, not every no is a no.</p>
 <p>grml uses <code>grub</code> as bootloader with the following entry:</p>
 <div class="collapsable-code">
-  <input id="code-1758665511255401000" type="checkbox"  />
-  <label for="code-1758665511255401000"><span class="collapsable-code__language">cfg</span><span class="collapsable-code__title">boot/grub/grmlsmallamd64_default.cfg</span>
+  <input id="code-1758666159236466000" type="checkbox"  />
+  <label for="code-1758666159236466000"><span class="collapsable-code__language">cfg</span><span class="collapsable-code__title">boot/grub/grmlsmallamd64_default.cfg</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-cfg"><code>menuentry &#34;grml-small-amd64 2025.08&#34; {
@@ -245,8 +245,8 @@ So, lets see how <code>live-boot</code> works.</p>
 <li>
 <p>Try 60 times, 1 per second, to find a live-bootable file system</p>
 <div class="collapsable-code">
-  <input id="code-1758665511255644000" type="checkbox"  />
-  <label for="code-1758665511255644000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+  <input id="code-1758666159236526000" type="checkbox"  />
+  <label for="code-1758666159236526000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code># Scan local devices for the image
@@ -268,8 +268,8 @@ done</code></pre>
 <li>
 <p>Unless <code>LIVE_MEDIA</code> is specified on command line, check removable then non removable devices</p>
 <div class="collapsable-code">
-  <input id="code-1758665511255672000" type="checkbox"  />
-  <label for="code-1758665511255672000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+  <input id="code-1758666159236549000" type="checkbox"  />
+  <label for="code-1758666159236549000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>find_livefs ()
@@ -289,8 +289,8 @@ done</code></pre>
 <li>
 <p>Mount whatever is mountable (also tries lvm, iso etc) and check inside</p>
 <div class="collapsable-code">
-  <input id="code-1758665511255691000" type="checkbox"  />
-  <label for="code-1758665511255691000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+  <input id="code-1758666159236567000" type="checkbox"  />
+  <label for="code-1758666159236567000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>check_dev ()
@@ -312,8 +312,8 @@ done</code></pre>
 <p>If a file with <code>.squashfs</code> or other fs extension exist inside a directory called <code>live/</code>
 (<code>LIVE_MEDIA_PATH=&quot;live&quot;</code> in <code>0001-init-vars.sh</code>) boot from here.</p>
 <div class="collapsable-code">
-  <input id="code-1758665511255712000" type="checkbox"  />
-  <label for="code-1758665511255712000"><span class="collapsable-code__language">bash</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+  <input id="code-1758666159236592000" type="checkbox"  />
+  <label for="code-1758666159236592000"><span class="collapsable-code__language">bash</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-bash"><code>is_live_path()
@@ -332,8 +332,8 @@ done</code></pre>
 <li>
 <p>And finally mount the live filesystem&rsquo;s root to <code>/root</code> via <code>setup_unionfs</code>.</p>
 <div class="collapsable-code">
-  <input id="code-1758665511255731000" type="checkbox"  />
-  <label for="code-1758665511255731000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+  <input id="code-1758666159236609000" type="checkbox"  />
+  <label for="code-1758666159236609000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>    if [ -n &#34;${MODULETORAMFILE}&#34; ] || [ -n &#34;${PLAIN_ROOT}&#34; ]
@@ -350,8 +350,8 @@ done</code></pre>
 to find out where <code>$rootmnt</code> is set, you won&rsquo;t find it. It is set in <code>initramfs</code>&rsquo;s <code>init</code>
 script:</p>
 <div class="collapsable-code">
-  <input id="code-1758665511255771000" type="checkbox"  />
-  <label for="code-1758665511255771000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">init</span>
+  <input id="code-1758666159236627000" type="checkbox"  />
+  <label for="code-1758666159236627000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">init</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>export rootmnt=/root</code></pre>
@@ -373,8 +373,8 @@ but looks for this path instead.</p>
 <code>/live</code> dir in my luks -&gt; lvm -&gt; xfs setup ?</p>
 <p>At the top of live-boot script, it tries to decrypt partitions.</p>
 <div class="collapsable-code">
-  <input id="code-1758665511255805000" type="checkbox"  />
-  <label for="code-1758665511255805000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+  <input id="code-1758666159236654000" type="checkbox"  />
+  <label for="code-1758666159236654000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>	if [ -x /scripts/local-top/cryptroot ]
@@ -493,7 +493,7 @@ I&rsquo;m not sure when this pivot happened.</p>
     <div class="pagination__buttons">
         
         <span class="button previous">
-            <a href="http://localhost:1313/posts/airtel-ipv6-opening-ports/">
+            <a href="https://hritik.sh/posts/airtel-ipv6-opening-ports/">
                 <span class="button__icon">←</span>
                 <span class="button__text">Open ports on local ipv6 devices to the internet</span>
             </a>
@@ -501,8 +501,8 @@ I&rsquo;m not sure when this pivot happened.</p>
         
         
         <span class="button next">
-            <a href="http://localhost:1313/posts/docker-mount-shenanigans/">
-                <span class="button__text">Docker mount shenanigans</span>
+            <a href="https://hritik.sh/posts/rasp-pi-serial-console/">
+                <span class="button__text">Rasp Pi Serial Console</span>
                 <span class="button__icon">→</span>
             </a>
         </span>

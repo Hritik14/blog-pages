@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
   
     <title>Rasp Pi Serial Console :: </title>
   
@@ -13,7 +13,7 @@ Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp
 
   <meta name="robots" content="noodp" />
 
-<link rel="canonical" href="http://localhost:1313/posts/rasp-pi-serial-console/" />
+<link rel="canonical" href="https://hritik.sh/posts/rasp-pi-serial-console/" />
 
 
 
@@ -25,15 +25,15 @@ Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp
   
   
   
-  <link rel="stylesheet" href="http://localhost:1313/styles.css">
+  <link rel="stylesheet" href="https://hritik.sh/styles.css">
 
 
 
-<link rel="stylesheet" href="http://localhost:1313/style.css">
+<link rel="stylesheet" href="https://hritik.sh/style.css">
 
 
 
-  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
+  <link rel="shortcut icon" href="https://hritik.sh/favicon.png">
 
 
 
@@ -52,11 +52,11 @@ Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp
 <meta property="og:description" content="While working on photos. I plugged in rasp pi to ethernet but it didn&rsquo;t come up in any network scan.
 Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp pi changed their HDMI from mini to micro, and I only have a mini adapter from pi zero.
 " />
-<meta property="og:url" content="http://localhost:1313/posts/rasp-pi-serial-console/" />
+<meta property="og:url" content="https://hritik.sh/posts/rasp-pi-serial-console/" />
 <meta property="og:site_name" content="" />
 
   
-    <meta property="og:image" content="http://localhost:1313/favicon.png">
+    <meta property="og:image" content="https://hritik.sh/favicon.png">
   
 
 <meta property="og:image:width" content="1200">
@@ -191,7 +191,7 @@ Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp
     
 <article class="post">
   <h1 class="post-title">
-    <a href="http://localhost:1313/posts/rasp-pi-serial-console/">Rasp Pi Serial Console</a>
+    <a href="https://hritik.sh/posts/rasp-pi-serial-console/">Rasp Pi Serial Console</a>
   </h1>
   <div class="post-meta"><time class="post-date">2025-08-29</time></div>
 
@@ -265,14 +265,14 @@ mount: exec /Library/Filesystems/ext4.fs/Contents/Resources/mount_ext4 for /User
 <p>Looks like rasp pi 5 has a <a href="https://forums.raspberrypi.com/viewtopic.php?t=358296">dedicated uart</a>.</p>
 <p>As per <a href="https://github.com/raspberrypi/documentation/issues/3239#issuecomment-1819869459">this</a> and <a href="https://pinout.xyz/pinout/uart">this</a> I need to explicitly enable <code>uart0</code> as default uart is debug uart on 3 pin dedicated header (ie not on pin 14 and 15).</p>
 <div class="collapsable-code">
-  <input id="code-1758665511256757000" type="checkbox"  />
-  <label for="code-1758665511256757000"><span class="collapsable-code__title">config.txt</span>
+  <input id="code-1758666159237033000" type="checkbox"  />
+  <label for="code-1758666159237033000"><span class="collapsable-code__title">config.txt</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-text"><code>dtparam=uart0_console   # Enable UART0/ttyAMA0 on GPIO 14 &amp; 15 and make it the console UART</code></pre>
 </div><div class="collapsable-code">
-  <input id="code-1758665511256774000" type="checkbox"  />
-  <label for="code-1758665511256774000"><span class="collapsable-code__title">cmdline.txt</span>
+  <input id="code-1758666159237049000" type="checkbox"  />
+  <label for="code-1758666159237049000"><span class="collapsable-code__title">cmdline.txt</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-text"><code>console=serial0,115200</code></pre>
@@ -370,15 +370,15 @@ A: because new firmwares have fallback - if debug uart is not connected, it fall
     <div class="pagination__buttons">
         
         <span class="button previous">
-            <a href="http://localhost:1313/posts/immich/">
+            <a href="https://hritik.sh/posts/rescue-me/">
                 <span class="button__icon">←</span>
-                <span class="button__text">Immich on Raspberry Pi 5</span>
+                <span class="button__text">Rescue me always</span>
             </a>
         </span>
         
         
         <span class="button next">
-            <a href="http://localhost:1313/posts/photos/">
+            <a href="https://hritik.sh/posts/photos/">
                 <span class="button__text">Photos</span>
                 <span class="button__icon">→</span>
             </a>

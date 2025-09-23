@@ -2,112 +2,63 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://hritik.sh/</loc>
     <lastmod>2025-09-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/airtel-ipv6-opening-ports/</loc>
+    <loc>https://hritik.sh/posts/airtel-ipv6-opening-ports/</loc>
     <lastmod>2025-09-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://hritik.sh/posts/</loc>
     <lastmod>2025-09-23T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/rescue-me/</loc>
+    <loc>https://hritik.sh/posts/rescue-me/</loc>
     <lastmod>2025-09-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/docker-mount-shenanigans/</loc>
-    <lastmod>2025-09-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/immich/</loc>
-    <lastmod>2025-09-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/rasp-pi-serial-console/</loc>
+    <loc>https://hritik.sh/posts/rasp-pi-serial-console/</loc>
     <lastmod>2025-08-29T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/photos/</loc>
+    <loc>https://hritik.sh/posts/photos/</loc>
     <lastmod>2025-08-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/ctf-writeups/</loc>
+    <loc>https://hritik.sh/ctf-writeups/</loc>
     <lastmod>2025-07-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/ctf-writeups/gctf-postviewer/</loc>
-    <lastmod>2025-07-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/cheatsheets/</loc>
+    <loc>https://hritik.sh/cheatsheets/</loc>
     <lastmod>2025-06-28T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cheatsheets/web/</loc>
-    <lastmod>2025-06-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/add-to-prompt/</loc>
+    <loc>https://hritik.sh/posts/add-to-prompt/</loc>
     <lastmod>2025-05-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/localhost-ipv6/</loc>
+    <loc>https://hritik.sh/posts/localhost-ipv6/</loc>
     <lastmod>2025-02-10T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/go-type/</loc>
+    <loc>https://hritik.sh/posts/go-type/</loc>
     <lastmod>2025-01-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/ctf-writeups/bsides-bangalore-2024/</loc>
+    <loc>https://hritik.sh/ctf-writeups/bsides-bangalore-2024/</loc>
     <lastmod>2024-06-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/cheatsheets/volatality/</loc>
+    <loc>https://hritik.sh/cheatsheets/volatality/</loc>
     <lastmod>2024-06-30T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/ctf-writeups/blackhat-mea-qual/</loc>
-    <lastmod>2023-10-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/why/</loc>
-    <lastmod>2023-10-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/ctf-writeups/maple-2023/</loc>
-    <lastmod>2023-10-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/email-ctf/</loc>
-    <lastmod>2023-09-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/personal-mailserver/</loc>
-    <lastmod>2023-09-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/default/</loc>
-    <lastmod>2023-09-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/hacks/</loc>
-    <lastmod>2023-09-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/llama-how-to-create-homemade-bomb/</loc>
-    <lastmod>2023-09-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/rc-car/</loc>
-    <lastmod>2023-09-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/constant-connection-to-linux-box/</loc>
-    <lastmod>2023-07-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/own-than-phown/</loc>
-    <lastmod>2021-08-26T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/driver-loading-and-binding/</loc>
+    <loc>https://hritik.sh/posts/driver-loading-and-binding/</loc>
     <lastmod>2021-05-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/linux-boot/</loc>
+    <loc>https://hritik.sh/posts/linux-boot/</loc>
     <lastmod>2020-12-18T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/secarmy-unintended-ctf/</loc>
+    <loc>https://hritik.sh/posts/secarmy-unintended-ctf/</loc>
     <lastmod>2020-11-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/multi-net/</loc>
+    <loc>https://hritik.sh/posts/multi-net/</loc>
     <lastmod>2020-04-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/inscriptions/</loc>
+    <loc>https://hritik.sh/posts/inscriptions/</loc>
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>https://hritik.sh/about/</loc>
   </url><url>
-    <loc>http://localhost:1313/posts/ai-attacks/</loc>
+    <loc>https://hritik.sh/categories/</loc>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-  </url><url>
-    <loc>http://localhost:1313/posts/hack-smart-homes/</loc>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://hritik.sh/tags/</loc>
   </url>
 </urlset>
