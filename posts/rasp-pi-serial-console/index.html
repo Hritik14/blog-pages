@@ -265,14 +265,14 @@ mount: exec /Library/Filesystems/ext4.fs/Contents/Resources/mount_ext4 for /User
 <p>Looks like rasp pi 5 has a <a href="https://forums.raspberrypi.com/viewtopic.php?t=358296">dedicated uart</a>.</p>
 <p>As per <a href="https://github.com/raspberrypi/documentation/issues/3239#issuecomment-1819869459">this</a> and <a href="https://pinout.xyz/pinout/uart">this</a> I need to explicitly enable <code>uart0</code> as default uart is debug uart on 3 pin dedicated header (ie not on pin 14 and 15).</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539917000" type="checkbox"  />
-  <label for="code-1758666553539917000"><span class="collapsable-code__title">config.txt</span>
+  <input id="code-1758757959448672000" type="checkbox"  />
+  <label for="code-1758757959448672000"><span class="collapsable-code__title">config.txt</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-text"><code>dtparam=uart0_console   # Enable UART0/ttyAMA0 on GPIO 14 &amp; 15 and make it the console UART</code></pre>
 </div><div class="collapsable-code">
-  <input id="code-1758666553539931000" type="checkbox"  />
-  <label for="code-1758666553539931000"><span class="collapsable-code__title">cmdline.txt</span>
+  <input id="code-1758757959448690000" type="checkbox"  />
+  <label for="code-1758757959448690000"><span class="collapsable-code__title">cmdline.txt</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-text"><code>console=serial0,115200</code></pre>

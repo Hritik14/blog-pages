@@ -219,8 +219,8 @@ Since I just used <code>grml</code> via a pendrive, can I have it boot from the 
 <p>Well, not every no is a no.</p>
 <p>grml uses <code>grub</code> as bootloader with the following entry:</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539462000" type="checkbox"  />
-  <label for="code-1758666553539462000"><span class="collapsable-code__language">cfg</span><span class="collapsable-code__title">boot/grub/grmlsmallamd64_default.cfg</span>
+  <input id="code-1758757959448116000" type="checkbox"  />
+  <label for="code-1758757959448116000"><span class="collapsable-code__language">cfg</span><span class="collapsable-code__title">boot/grub/grmlsmallamd64_default.cfg</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-cfg"><code>menuentry &#34;grml-small-amd64 2025.08&#34; {
@@ -245,8 +245,8 @@ So, lets see how <code>live-boot</code> works.</p>
 <li>
 <p>Try 60 times, 1 per second, to find a live-bootable file system</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539511000" type="checkbox"  />
-  <label for="code-1758666553539511000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+  <input id="code-1758757959448176000" type="checkbox"  />
+  <label for="code-1758757959448176000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code># Scan local devices for the image
@@ -268,8 +268,8 @@ done</code></pre>
 <li>
 <p>Unless <code>LIVE_MEDIA</code> is specified on command line, check removable then non removable devices</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539529000" type="checkbox"  />
-  <label for="code-1758666553539529000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+  <input id="code-1758757959448198000" type="checkbox"  />
+  <label for="code-1758757959448198000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>find_livefs ()
@@ -289,8 +289,8 @@ done</code></pre>
 <li>
 <p>Mount whatever is mountable (also tries lvm, iso etc) and check inside</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539543000" type="checkbox"  />
-  <label for="code-1758666553539543000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+  <input id="code-1758757959448215000" type="checkbox"  />
+  <label for="code-1758757959448215000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>check_dev ()
@@ -312,8 +312,8 @@ done</code></pre>
 <p>If a file with <code>.squashfs</code> or other fs extension exist inside a directory called <code>live/</code>
 (<code>LIVE_MEDIA_PATH=&quot;live&quot;</code> in <code>0001-init-vars.sh</code>) boot from here.</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539559000" type="checkbox"  />
-  <label for="code-1758666553539559000"><span class="collapsable-code__language">bash</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
+  <input id="code-1758757959448233000" type="checkbox"  />
+  <label for="code-1758757959448233000"><span class="collapsable-code__language">bash</span><span class="collapsable-code__title">9990-misc-helpers.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-bash"><code>is_live_path()
@@ -332,8 +332,8 @@ done</code></pre>
 <li>
 <p>And finally mount the live filesystem&rsquo;s root to <code>/root</code> via <code>setup_unionfs</code>.</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539573000" type="checkbox"  />
-  <label for="code-1758666553539573000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+  <input id="code-1758757959448250000" type="checkbox"  />
+  <label for="code-1758757959448250000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>    if [ -n &#34;${MODULETORAMFILE}&#34; ] || [ -n &#34;${PLAIN_ROOT}&#34; ]
@@ -350,8 +350,8 @@ done</code></pre>
 to find out where <code>$rootmnt</code> is set, you won&rsquo;t find it. It is set in <code>initramfs</code>&rsquo;s <code>init</code>
 script:</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539587000" type="checkbox"  />
-  <label for="code-1758666553539587000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">init</span>
+  <input id="code-1758757959448266000" type="checkbox"  />
+  <label for="code-1758757959448266000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">init</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>export rootmnt=/root</code></pre>
@@ -373,8 +373,8 @@ but looks for this path instead.</p>
 <code>/live</code> dir in my luks -&gt; lvm -&gt; xfs setup ?</p>
 <p>At the top of live-boot script, it tries to decrypt partitions.</p>
 <div class="collapsable-code">
-  <input id="code-1758666553539611000" type="checkbox"  />
-  <label for="code-1758666553539611000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
+  <input id="code-1758757959448298000" type="checkbox"  />
+  <label for="code-1758757959448298000"><span class="collapsable-code__language">sh</span><span class="collapsable-code__title">9990-main.sh</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-sh"><code>	if [ -x /scripts/local-top/cryptroot ]

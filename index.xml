@@ -14,9 +14,9 @@
       
       <guid>https://hritik.sh/posts/airtel-ipv6-opening-ports/</guid>
       <description>&lt;p&gt;I remember the days when I used to play with metasploit &lt;code&gt;reverse_tcp&lt;/code&gt; but would never be able to get
-a connection while on the internet. I worked, but always on the local network.&lt;/p&gt;</description>
+a connection while on the internet. It worked, but always on the local network.&lt;/p&gt;</description>
       <content>&lt;p&gt;I remember the days when I used to play with metasploit &lt;code&gt;reverse_tcp&lt;/code&gt; but would never be able to get
-a connection while on the internet. I worked, but always on the local network.&lt;/p&gt;
+a connection while on the internet. It worked, but always on the local network.&lt;/p&gt;
 &lt;p&gt;I later realized, the reason was &lt;a href=&#34;https://en.wikipedia.org/wiki/Carrier-grade_NAT&#34;&gt;CGNAT&lt;/a&gt;. My ISP never routed any open ports on my public IP.&lt;/p&gt;
 &lt;p&gt;The world moved forward and &lt;code&gt;IPv6&lt;/code&gt; adoption increased. Now, both Airtel and Jio support IPv6.
 It is now easier than ever to expose local ports to the internet.&lt;/p&gt;
@@ -76,8 +76,8 @@ Since I just used &lt;code&gt;grml&lt;/code&gt; via a pendrive, can I have it bo
 &lt;p&gt;Well, not every no is a no.&lt;/p&gt;
 &lt;p&gt;grml uses &lt;code&gt;grub&lt;/code&gt; as bootloader with the following entry:&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564329000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564329000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;cfg&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;boot/grub/grmlsmallamd64_default.cfg&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465107000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465107000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;cfg&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;boot/grub/grmlsmallamd64_default.cfg&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-cfg&#34;&gt;&lt;code&gt;menuentry &amp;#34;grml-small-amd64 2025.08&amp;#34; {
@@ -102,8 +102,8 @@ So, lets see how &lt;code&gt;live-boot&lt;/code&gt; works.&lt;/p&gt;
 &lt;li&gt;
 &lt;p&gt;Try 60 times, 1 per second, to find a live-bootable file system&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564379000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564379000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465157000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465157000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;# Scan local devices for the image
@@ -125,8 +125,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;Unless &lt;code&gt;LIVE_MEDIA&lt;/code&gt; is specified on command line, check removable then non removable devices&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564402000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564402000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465180000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465180000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;find_livefs ()
@@ -146,8 +146,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;Mount whatever is mountable (also tries lvm, iso etc) and check inside&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564420000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564420000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465198000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465198000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;check_dev ()
@@ -169,8 +169,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;If a file with &lt;code&gt;.squashfs&lt;/code&gt; or other fs extension exist inside a directory called &lt;code&gt;live/&lt;/code&gt;
 (&lt;code&gt;LIVE_MEDIA_PATH=&amp;quot;live&amp;quot;&lt;/code&gt; in &lt;code&gt;0001-init-vars.sh&lt;/code&gt;) boot from here.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564440000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564440000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;bash&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465215000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465215000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;bash&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-bash&#34;&gt;&lt;code&gt;is_live_path()
@@ -189,8 +189,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;And finally mount the live filesystem&amp;rsquo;s root to &lt;code&gt;/root&lt;/code&gt; via &lt;code&gt;setup_unionfs&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564456000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564456000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465230000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465230000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;    if [ -n &amp;#34;${MODULETORAMFILE}&amp;#34; ] || [ -n &amp;#34;${PLAIN_ROOT}&amp;#34; ]
@@ -207,8 +207,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 to find out where &lt;code&gt;$rootmnt&lt;/code&gt; is set, you won&amp;rsquo;t find it. It is set in &lt;code&gt;initramfs&lt;/code&gt;&amp;rsquo;s &lt;code&gt;init&lt;/code&gt;
 script:&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564471000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564471000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;init&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465248000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465248000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;init&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;export rootmnt=/root&lt;/code&gt;&lt;/pre&gt;
@@ -230,8 +230,8 @@ but looks for this path instead.&lt;/p&gt;
 &lt;code&gt;/live&lt;/code&gt; dir in my luks -&amp;gt; lvm -&amp;gt; xfs setup ?&lt;/p&gt;
 &lt;p&gt;At the top of live-boot script, it tries to decrypt partitions.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564501000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564501000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465277000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465277000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;	if [ -x /scripts/local-top/cryptroot ]
@@ -412,14 +412,14 @@ mount: exec /Library/Filesystems/ext4.fs/Contents/Resources/mount_ext4 for /User
 &lt;p&gt;Looks like rasp pi 5 has a &lt;a href=&#34;https://forums.raspberrypi.com/viewtopic.php?t=358296&#34;&gt;dedicated uart&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;As per &lt;a href=&#34;https://github.com/raspberrypi/documentation/issues/3239#issuecomment-1819869459&#34;&gt;this&lt;/a&gt; and &lt;a href=&#34;https://pinout.xyz/pinout/uart&#34;&gt;this&lt;/a&gt; I need to explicitly enable &lt;code&gt;uart0&lt;/code&gt; as default uart is debug uart on 3 pin dedicated header (ie not on pin 14 and 15).&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564913000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564913000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;config.txt&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465672000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465672000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;config.txt&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;dtparam=uart0_console   # Enable UART0/ttyAMA0 on GPIO 14 &amp;amp; 15 and make it the console UART&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;&lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1758666553564928000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1758666553564928000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;cmdline.txt&lt;/span&gt;
+  &lt;input id=&#34;code-1758757959465686000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1758757959465686000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;cmdline.txt&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;console=serial0,115200&lt;/code&gt;&lt;/pre&gt;
