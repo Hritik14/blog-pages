@@ -3,12 +3,15 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://hritik.sh/</loc>
-    <lastmod>2025-09-23T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://hritik.sh/posts/airtel-ipv6-opening-ports/</loc>
-    <lastmod>2025-09-23T00:00:00+00:00</lastmod>
+    <lastmod>2025-12-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://hritik.sh/posts/</loc>
+    <lastmod>2025-12-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://hritik.sh/posts/bad-inheritance/</loc>
+    <lastmod>2025-12-25T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://hritik.sh/posts/airtel-ipv6-opening-ports/</loc>
     <lastmod>2025-09-23T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://hritik.sh/posts/rescue-me/</loc>
@@ -54,6 +57,8 @@
     <lastmod>2020-04-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://hritik.sh/posts/inscriptions/</loc>
+  </url><url>
+    <loc>https://hritik.sh/posts/template/</loc>
   </url><url>
     <loc>https://hritik.sh/about/</loc>
   </url><url>

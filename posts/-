@@ -1,0 +1,18 @@
+---
+title: "Code exploration in go"
+date: 2025-12-01
+draft: true
+summary: ""
+keywords: [""]
+---
+
+Someone suggested [Go's profiler][1] to explore the codebase. It makes sense, you could
+figure out the slow parts of your code, but what about other parts. What about parts
+that aren't slow yet relevant ? Since the profiler takes samples every fixed interval,
+it is bound to miss the fast functions.
+
+
+
+
+
+[1]: https://go.dev/blog/pprof

@@ -6,7 +6,376 @@
     <description>Recent content in Posts on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Tue, 23 Sep 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://hritik.sh/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 25 Dec 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://hritik.sh/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What happens when your child inherits a breakpoint</title>
+      <link>https://hritik.sh/posts/bad-inheritance/</link>
+      <pubDate>Thu, 25 Dec 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://hritik.sh/posts/bad-inheritance/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;If a process &lt;code&gt;fork()&lt;/code&gt;s while debugging, will the child inherit the breakpoint ?&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;In a rush ? Go to &lt;a href=&#34;https://hritik.sh/posts/bad-inheritance/#takeaways&#34;&gt;takeaways&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;How does a debugger attach to a running process forking into 2 ? Will it automatically attach to
+two processes ? What if we change a function while we have a breakpoint, will it
+affect child and parent both ? Let&amp;rsquo;s try it out.&lt;/p&gt;</description>
+      <content>&lt;blockquote&gt;
+&lt;p&gt;If a process &lt;code&gt;fork()&lt;/code&gt;s while debugging, will the child inherit the breakpoint ?&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;In a rush ? Go to &lt;a href=&#34;https://hritik.sh/posts/bad-inheritance/#takeaways&#34;&gt;takeaways&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;How does a debugger attach to a running process forking into 2 ? Will it automatically attach to
+two processes ? What if we change a function while we have a breakpoint, will it
+affect child and parent both ? Let&amp;rsquo;s try it out.&lt;/p&gt;
+&lt;pre class=&#34;language-c&#34;&gt;&lt;code&gt;#include&amp;lt;stdio.h&amp;gt;
+#include &amp;lt;unistd.h&amp;gt;
+#include &amp;lt;sys/types.h&amp;gt;
+
+void answer(){
+  // breakpoint
+  int ans = 42;
+  printf(&amp;#34;the answer to life is %d\n&amp;#34;, ans);
+}
+
+int main(){
+  int naptime = 5;
+  printf(&amp;#34;Hello, program start\n&amp;#34;);
+  
+  pid_t cpid = fork();
+  pid_t mypid = getpid();
+  printf(&amp;#34;Child created, pid: %d\n&amp;#34;, cpid); 
+
+  if (cpid == 0) {
+    printf(&amp;#34;[%d] I&amp;#39;m the child. cpid: %d\n&amp;#34;, mypid, cpid); 
+  } else {
+    printf(&amp;#34;[%d] I&amp;#39;m the parent. cpid: %d\n&amp;#34;, mypid, cpid); 
+  }
+
+  printf(&amp;#34;Sleeping for %d secs\n&amp;#34;, naptime); 
+  sleep(naptime);
+  printf(&amp;#34;[%d] Awake!\n&amp;#34;, mypid); 
+
+  answer();
+
+  printf(&amp;#34;[%d] bye ! \n&amp;#34;, mypid);
+
+  return 0;
+}&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This simple program creates a child fork, sleeps for 5 seconds, wakes up and then
+calls &lt;code&gt;answer()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Without a breakpoint, our output is something like this:&lt;/p&gt;
+&lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;; ./fork
+Hello, program start
+Child created, pid: 66817
+[66816] I&amp;#39;m the parent. cpid: 66817
+Sleeping for 5 secs
+Child created, pid: 0
+[66817] I&amp;#39;m the child. cpid: 0
+Sleeping for 5 secs
+[66817] Awake!
+[66817] the answer to life is 42
+[66817] bye !
+[66816] Awake!
+[66816] the answer to life is 42
+[66816] bye !&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;Upcoming fun fact.
+During the sleep, the process relationship looks sane enough, child belongs to parent:&lt;/p&gt;
+&lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;; pstree -p 66817
+-&amp;#43;= 00001 root /sbin/launchd
+ \-&amp;#43;= 02074 neo tmux
+   \-&amp;#43;= 66629 neo -zsh
+     \-&amp;#43;= 66816 neo ./fork
+       \--- 66817 neo ./fork&lt;/code&gt;&lt;/pre&gt;&lt;/blockquote&gt;
+&lt;p&gt;Let&amp;rsquo;s rerun this in &lt;code&gt;lldb&lt;/code&gt; (gdb for mac) and break at &lt;code&gt;answer&lt;/code&gt;. Then we can change &lt;code&gt;ans&lt;/code&gt; from 42 to 29 and see what
+happens to the child.&lt;/p&gt;
+&lt;pre class=&#34;language-c&#34;&gt;&lt;code&gt;; gcc fork.c -g -o fork
+; lldb fork
+(lldb) target create &amp;#34;fork&amp;#34;
+Current executable set to &amp;#39;/Users/neo/raw/fork&amp;#39; (arm64).
+(lldb) b answer
+Breakpoint 1: where = fork`answer &amp;#43; 12 at fork.c:7:7, address = 0x000000010000046c
+(lldb) r
+Process 61763 launched: &amp;#39;/Users/neo/raw/fork&amp;#39; (arm64)
+Hello, program start
+Child created, pid: 61773
+[61763] I&amp;#39;m the parent. cpid: 61773
+Sleeping for 5 secs
+Child created, pid: 0
+[61773] I&amp;#39;m the child. cpid: 0
+Sleeping for 5 secs
+[61773] Awake!
+[61763] Awake!
+Process 61763 stopped
+* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = breakpoint 1.1
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&amp;gt; 7      int ans = 42;
+   8      printf(&amp;#34;[%d] the answer to life is %d\n&amp;#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+(lldb) n
+Process 61763 stopped
+* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = step over
+    frame #0: 0x0000000100000474 fork`answer at fork.c:8:45
+   5    void answer(){
+   6      // breakpoint
+   7      int ans = 42;
+-&amp;gt; 8      printf(&amp;#34;[%d] the answer to life is %d\n&amp;#34;, getpid(), ans);
+   9    }
+   10
+   11   int main(){
+Target 0: (fork) stopped.
+(lldb) expr ans = 29
+(int) $0 = 29
+(lldb) c
+Process 61763 resuming
+[61763] the answer to life is 29
+[61763] bye !
+Process 61763 exited with status = 0 (0x00000000)
+(lldb)&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;Note that we must change ans on line 8, since at line 7 ans is uninitialized. After line 7 is executed, any
+value we set will be overwritten.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Output contains only one answer &lt;code&gt;29&lt;/code&gt; and a single &lt;code&gt;bye&lt;/code&gt; from parent. What happened to our child&amp;rsquo;s output ?
+Probably this debugger only captures stdout of a single process, but we did get two &lt;code&gt;Awake&lt;/code&gt;s from child and
+parent. The stdout split happened only after the breakpoint. Let&amp;rsquo;s get another debugger and attach it to child as well.&lt;/p&gt;
+&lt;div class=&#34;collapsable-code&#34;&gt;
+  &lt;input id=&#34;code-1766700400178233000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178233000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
+    &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;pre class=&#34;language-c&#34;&gt;&lt;code&gt;; lldb fork
+(lldb) target create &amp;#34;fork&amp;#34;
+Current executable set to &amp;#39;/Users/neo/raw/fork&amp;#39; (arm64).
+(lldb) b answer
+Breakpoint 1: where = fork`answer &amp;#43; 12 at fork.c:7:7, address = 0x000000010000046c
+(lldb) r
+Process 62875 launched: &amp;#39;/Users/neo/raw/fork&amp;#39; (arm64)
+Hello, program start
+Child created, pid: 62878
+[62875] I&amp;#39;m the parent. cpid: 62878
+Sleeping for 5 secs
+Child created, pid: 0
+[62878] I&amp;#39;m the child. cpid: 0
+Sleeping for 5 secs
+[62875] Awake!
+Process 62875 stopped
+* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = breakpoint 1.1
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&amp;gt; 7      int ans = 42;
+   8      printf(&amp;#34;[%d] the answer to life is %d\n&amp;#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+[62878] Awake!
+(lldb)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;div class=&#34;collapsable-code&#34;&gt;
+  &lt;input id=&#34;code-1766700400178256000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178256000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
+    &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;pre class=&#34;language-c&#34;&gt;&lt;code&gt;; lldb -p 62878
+(lldb) process attach --pid 62878
+Process 62878 stopped
+* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = signal SIGSTOP
+    frame #0: 0x00000001830864e8 libsystem_kernel.dylib`__semwait_signal &amp;#43; 8
+libsystem_kernel.dylib`__semwait_signal:
+-&amp;gt;  0x1830864e8 &amp;lt;&amp;#43;8&amp;gt;:  b.lo   0x183086508    ; &amp;lt;&amp;#43;40&amp;gt;
+    0x1830864ec &amp;lt;&amp;#43;12&amp;gt;: pacibsp
+    0x1830864f0 &amp;lt;&amp;#43;16&amp;gt;: stp    x29, x30, [sp, #-0x10]!
+    0x1830864f4 &amp;lt;&amp;#43;20&amp;gt;: mov    x29, sp
+Target 0: (fork) stopped.
+Executable binary set to &amp;#34;/Users/neo/raw/fork&amp;#34;.
+Architecture set to: arm64-apple-macosx-.
+(lldb) c
+Process 62878 resuming
+Process 62878 stopped
+* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = EXC_BREAKPOINT (code=1, subcode=0x10000046c)
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&amp;gt; 7      int ans = 42;
+   8      printf(&amp;#34;[%d] the answer to life is %d\n&amp;#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+(lldb) n
+Process 62878 stopped
+* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = EXC_BREAKPOINT (code=1, subcode=0x10000046c)
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&amp;gt; 7      int ans = 42;
+   8      printf(&amp;#34;[%d] the answer to life is %d\n&amp;#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+(lldb) c
+Process 62878 resuming
+Process 62878 stopped
+* thread #1, queue = &amp;#39;com.apple.main-thread&amp;#39;, stop reason = EXC_BREAKPOINT (code=1, subcode=0x10000046c)
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&amp;gt; 7      int ans = 42;
+   8      printf(&amp;#34;[%d] the answer to life is %d\n&amp;#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+(lldb)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;p&gt;The first breakpoint in child is set by the debugger (SIGSTOP) to hook to this process. The second breakpoint,
+however, is our breakpoint that we set in the parent process. So, yes ! Attaching a breakpoint to a parent
+does propagate it to the child.
+But, why doesn&amp;rsquo;t the child continue ? Hitting &lt;code&gt;n&lt;/code&gt;ext or even &lt;code&gt;c&lt;/code&gt;ontinue does nothing in the child&amp;rsquo;s debugger.
+The child is evidently stuck!&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Fun fact.
+Let&amp;rsquo;s check the &lt;code&gt;pstree&lt;/code&gt; at this moment in time:&lt;/p&gt;
+&lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;; pstree -p 62875 # parent
+-&amp;#43;= 00001 root /sbin/launchd
+ \-&amp;#43;= 02074 neo tmux
+   \-&amp;#43;= 60121 neo -zsh
+     \-&amp;#43;= 62867 neo /Library/Developer/CommandLineTools/usr/bin/lldb fork
+       \-&amp;#43;= 62876 neo /Library/Developer/CommandLineTools/Library/PrivateFrameworks
+         \--= 62875 neo /Users/neo/raw/fork
+
+; pstree -p 62878 # child
+-&amp;#43;= 00001 root /sbin/launchd
+ \-&amp;#43;= 02074 neo tmux
+   \-&amp;#43;= 60276 neo -zsh
+     \-&amp;#43;= 62898 neo /Library/Developer/CommandLineTools/usr/bin/lldb -p 62878
+       \-&amp;#43;= 62899 neo /Library/Developer/CommandLineTools/Library/PrivateFrameworks
+         \--- 62878 neo /Users/neo/raw/fork&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The child no longer belongs to the parent. The child has effectively been kidnapped by lldb !&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;A disassemble shows the current instruction pointer on a &lt;code&gt;brk&lt;/code&gt; instruction.&lt;/p&gt;
+&lt;div class=&#34;collapsable-code&#34;&gt;
+  &lt;input id=&#34;code-1766700400178290000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178290000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
+    &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;pre class=&#34;language-nasm&#34;&gt;&lt;code&gt;(lldb) disassemble
+fork`answer:
+    0x100000460 &amp;lt;&amp;#43;0&amp;gt;:  sub    sp, sp, #0x30
+    0x100000464 &amp;lt;&amp;#43;4&amp;gt;:  stp    x29, x30, [sp, #0x20]
+    0x100000468 &amp;lt;&amp;#43;8&amp;gt;:  add    x29, sp, #0x20
+-&amp;gt;  0x10000046c &amp;lt;&amp;#43;12&amp;gt;: brk    #0
+    0x100000470 &amp;lt;&amp;#43;16&amp;gt;: stur   w8, [x29, #-0x4]
+    0x100000474 &amp;lt;&amp;#43;20&amp;gt;: bl     0x1000005bc    ; symbol stub for: getpid
+    0x100000478 &amp;lt;&amp;#43;24&amp;gt;: ldur   w8, [x29, #-0x4]
+    0x10000047c &amp;lt;&amp;#43;28&amp;gt;: mov    x9, sp
+    0x100000480 &amp;lt;&amp;#43;32&amp;gt;: mov    x10, x0
+    0x100000484 &amp;lt;&amp;#43;36&amp;gt;: str    x10, [x9]
+    0x100000488 &amp;lt;&amp;#43;40&amp;gt;: str    x8, [x9, #0x8]
+    0x10000048c &amp;lt;&amp;#43;44&amp;gt;: adrp   x0, 0
+    0x100000490 &amp;lt;&amp;#43;48&amp;gt;: add    x0, x0, #0x5e0 ; &amp;#34;[%d] the answer to life is %d\n&amp;#34;
+    0x100000494 &amp;lt;&amp;#43;52&amp;gt;: bl     0x1000005c8    ; symbol stub for: printf
+    0x100000498 &amp;lt;&amp;#43;56&amp;gt;: ldp    x29, x30, [sp, #0x20]
+    0x10000049c &amp;lt;&amp;#43;60&amp;gt;: add    sp, sp, #0x30
+    0x1000004a0 &amp;lt;&amp;#43;64&amp;gt;: ret&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;p&gt;For reference, here&amp;rsquo;s how it looks in the parent&lt;/p&gt;
+&lt;div class=&#34;collapsable-code&#34;&gt;
+  &lt;input id=&#34;code-1766700400178313000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178313000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
+    &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;pre class=&#34;language-nasm&#34;&gt;&lt;code&gt;(lldb) disassemble
+fork`answer:
+    0x100000460 &amp;lt;&amp;#43;0&amp;gt;:  sub    sp, sp, #0x30
+    0x100000464 &amp;lt;&amp;#43;4&amp;gt;:  stp    x29, x30, [sp, #0x20]
+    0x100000468 &amp;lt;&amp;#43;8&amp;gt;:  add    x29, sp, #0x20
+-&amp;gt;  0x10000046c &amp;lt;&amp;#43;12&amp;gt;: mov    w8, #0x2a ; =42
+    0x100000470 &amp;lt;&amp;#43;16&amp;gt;: stur   w8, [x29, #-0x4]
+    0x100000474 &amp;lt;&amp;#43;20&amp;gt;: bl     0x1000005bc    ; symbol stub for: getpid
+    0x100000478 &amp;lt;&amp;#43;24&amp;gt;: ldur   w8, [x29, #-0x4]
+    0x10000047c &amp;lt;&amp;#43;28&amp;gt;: mov    x9, sp
+    0x100000480 &amp;lt;&amp;#43;32&amp;gt;: mov    x10, x0
+    0x100000484 &amp;lt;&amp;#43;36&amp;gt;: str    x10, [x9]
+    0x100000488 &amp;lt;&amp;#43;40&amp;gt;: str    x8, [x9, #0x8]
+    0x10000048c &amp;lt;&amp;#43;44&amp;gt;: adrp   x0, 0
+    0x100000490 &amp;lt;&amp;#43;48&amp;gt;: add    x0, x0, #0x5e0 ; &amp;#34;[%d] the answer to life is %d\n&amp;#34;
+    0x100000494 &amp;lt;&amp;#43;52&amp;gt;: bl     0x1000005c8    ; symbol stub for: printf
+    0x100000498 &amp;lt;&amp;#43;56&amp;gt;: ldp    x29, x30, [sp, #0x20]
+    0x10000049c &amp;lt;&amp;#43;60&amp;gt;: add    sp, sp, #0x30
+    0x1000004a0 &amp;lt;&amp;#43;64&amp;gt;: ret&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;p&gt;A &lt;code&gt;mov&lt;/code&gt; instruction has been replaced by &lt;code&gt;brk&lt;/code&gt; in the child. Since &lt;code&gt;brk&lt;/code&gt; does not increase the program counter,
+the instruction pointer remains on the same &lt;code&gt;brk&lt;/code&gt; instruction and even hitting &lt;code&gt;c&lt;/code&gt;continue does nothing
+and reexecutes &lt;code&gt;brk&lt;/code&gt; instruction indefinitely.&lt;/p&gt;
+&lt;p&gt;This is how debuggers work internally. They replace a single instruction at the point of breakpoint with a &lt;code&gt;brk&lt;/code&gt;,
+whenever the program hits this &lt;code&gt;brk&lt;/code&gt;, it stops with &lt;code&gt;EXC_BREAKPOINT&lt;/code&gt; and the debugger &lt;em&gt;replaces the &lt;code&gt;brk&lt;/code&gt; with
+the actual instruction.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Since, our second debugger knows nothing about this &lt;code&gt;brk&lt;/code&gt; trick being present in the program (and which
+instruction to replace it with), it does not replace &lt;code&gt;brk&lt;/code&gt; during the breakpoint hit as it assumes &lt;code&gt;brk&lt;/code&gt; is a part of the
+program and keeps executing indefinitily without ever increasing program counter.&lt;/p&gt;
+&lt;p&gt;This is why we never got our &lt;code&gt;bye&lt;/code&gt; and answer to life from the child. It was stuck forever in the &lt;code&gt;brk&lt;/code&gt;
+until the OS decided to kill it after the parent died.&lt;/p&gt;
+&lt;p&gt;Would stepping over this instruction manually in the debugger solve our issue ?&lt;/p&gt;
+&lt;div class=&#34;collapsable-code&#34;&gt;
+  &lt;input id=&#34;code-1766700400178336000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178336000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
+    &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;pre class=&#34;language-nasm&#34;&gt;&lt;code&gt;(lldb) expr $pc = 0x100000470
+(unsigned long) $0 = 4294968432
+
+(lldb) disassemble
+fork`answer:
+    0x100000460 &amp;lt;&amp;#43;0&amp;gt;:  sub    sp, sp, #0x30
+    0x100000464 &amp;lt;&amp;#43;4&amp;gt;:  stp    x29, x30, [sp, #0x20]
+    0x100000468 &amp;lt;&amp;#43;8&amp;gt;:  add    x29, sp, #0x20
+    0x10000046c &amp;lt;&amp;#43;12&amp;gt;: brk    #0
+-&amp;gt;  0x100000470 &amp;lt;&amp;#43;16&amp;gt;: stur   w8, [x29, #-0x4]
+    0x100000474 &amp;lt;&amp;#43;20&amp;gt;: bl     0x1000005bc    ; symbol stub for: getpid
+    0x100000478 &amp;lt;&amp;#43;24&amp;gt;: ldur   w8, [x29, #-0x4]
+    0x10000047c &amp;lt;&amp;#43;28&amp;gt;: mov    x9, sp
+    0x100000480 &amp;lt;&amp;#43;32&amp;gt;: mov    x10, x0
+    0x100000484 &amp;lt;&amp;#43;36&amp;gt;: str    x10, [x9]
+    0x100000488 &amp;lt;&amp;#43;40&amp;gt;: str    x8, [x9, #0x8]
+    0x10000048c &amp;lt;&amp;#43;44&amp;gt;: adrp   x0, 0
+    0x100000490 &amp;lt;&amp;#43;48&amp;gt;: add    x0, x0, #0x5e0 ; &amp;#34;[%d] the answer to life is %d\n&amp;#34;
+    0x100000494 &amp;lt;&amp;#43;52&amp;gt;: bl     0x1000005c8    ; symbol stub for: printf
+    0x100000498 &amp;lt;&amp;#43;56&amp;gt;: ldp    x29, x30, [sp, #0x20]
+    0x10000049c &amp;lt;&amp;#43;60&amp;gt;: add    sp, sp, #0x30
+    0x1000004a0 &amp;lt;&amp;#43;64&amp;gt;: ret
+
+(lldb) c
+Process 62878 resuming
+Process 62878 exited with status = 0 (0x00000000)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;p&gt;Yes ! ?&lt;/p&gt;
+&lt;p&gt;Sadly, no. The stdout is still connected to the parent &lt;code&gt;lldb&lt;/code&gt; and we got a garbage answer from child.&lt;/p&gt;
+&lt;div class=&#34;collapsable-code&#34;&gt;
+  &lt;input id=&#34;code-1766700400178358000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178358000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
+    &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
+  &lt;/label&gt;
+  &lt;pre class=&#34;language-nasm&#34;&gt;&lt;code&gt;[62878] the answer to life is -324843284
+[62878] bye !
+(lldb) c
+Process 62875 resuming
+[62875] the answer to life is 42
+[62875] bye !&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;&lt;p&gt;This is because although we stepped over the &lt;code&gt;brk&lt;/code&gt; instruction in the child, we didn&amp;rsquo;t &lt;em&gt;replace&lt;/em&gt; it with an
+approprate original instruction (here: &lt;code&gt;0x10000046c &amp;lt;+12&amp;gt;: mov    w8, #0x2a ; =42&lt;/code&gt;).
+This line was responsible for initializing our &lt;code&gt;ans&lt;/code&gt; variable in the child.&lt;/p&gt;
+&lt;p&gt;Of course, we could run the missing instruction manually in the child&amp;rsquo;s debugger to fill the missing link, and
+everything comes back to normal.&lt;/p&gt;
+&lt;h2 id=&#34;takeaways&#34;&gt;Takeaways&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;brk&lt;/code&gt; is actually replaced not added, and debugger knows when to replace back with original instruction.&lt;/li&gt;
+&lt;li&gt;Debugger, if attached on child (created by fork()), it will steal the child from parent process&lt;/li&gt;
+&lt;li&gt;When fork()-ed, breakpoint instructions are also forked.&lt;/li&gt;
+&lt;li&gt;If a debugger is atteched to the new child, the BRK instruction is also copid, the child stops at that instruction but debugger does not know about this BRK and assumes it as program&amp;rsquo;s intended instruction.&lt;/li&gt;
+&lt;li&gt;Cpu will not increase program counter (pc) when &lt;code&gt;brk&lt;/code&gt; is hit.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;credits&#34;&gt;Credits&lt;/h2&gt;
+&lt;p&gt;We stumbled upon this while pondering over with &lt;a href=&#34;https://x.com/youhaveme__&#34;&gt;Roshan&lt;/a&gt; and
+&lt;a href=&#34;https://x.com/0xsapra&#34;&gt;Sapra&lt;/a&gt;&lt;/p&gt;
+</content>
+    </item>
+    
     <item>
       <title>Open ports on local ipv6 devices to the internet</title>
       <link>https://hritik.sh/posts/airtel-ipv6-opening-ports/</link>
@@ -76,8 +445,8 @@ Since I just used &lt;code&gt;grml&lt;/code&gt; via a pendrive, can I have it bo
 &lt;p&gt;Well, not every no is a no.&lt;/p&gt;
 &lt;p&gt;grml uses &lt;code&gt;grub&lt;/code&gt; as bootloader with the following entry:&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896032000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896032000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;cfg&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;boot/grub/grmlsmallamd64_default.cfg&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400178802000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178802000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;cfg&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;boot/grub/grmlsmallamd64_default.cfg&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-cfg&#34;&gt;&lt;code&gt;menuentry &amp;#34;grml-small-amd64 2025.08&amp;#34; {
@@ -102,8 +471,8 @@ So, lets see how &lt;code&gt;live-boot&lt;/code&gt; works.&lt;/p&gt;
 &lt;li&gt;
 &lt;p&gt;Try 60 times, 1 per second, to find a live-bootable file system&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896083000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896083000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400178851000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178851000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;# Scan local devices for the image
@@ -125,8 +494,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;Unless &lt;code&gt;LIVE_MEDIA&lt;/code&gt; is specified on command line, check removable then non removable devices&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896103000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896103000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400178871000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178871000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;find_livefs ()
@@ -146,8 +515,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;Mount whatever is mountable (also tries lvm, iso etc) and check inside&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896118000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896118000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400178888000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178888000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;check_dev ()
@@ -169,8 +538,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;If a file with &lt;code&gt;.squashfs&lt;/code&gt; or other fs extension exist inside a directory called &lt;code&gt;live/&lt;/code&gt;
 (&lt;code&gt;LIVE_MEDIA_PATH=&amp;quot;live&amp;quot;&lt;/code&gt; in &lt;code&gt;0001-init-vars.sh&lt;/code&gt;) boot from here.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896133000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896133000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;bash&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400178907000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178907000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;bash&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-bash&#34;&gt;&lt;code&gt;is_live_path()
@@ -189,8 +558,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;And finally mount the live filesystem&amp;rsquo;s root to &lt;code&gt;/root&lt;/code&gt; via &lt;code&gt;setup_unionfs&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896147000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896147000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400178925000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178925000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;    if [ -n &amp;#34;${MODULETORAMFILE}&amp;#34; ] || [ -n &amp;#34;${PLAIN_ROOT}&amp;#34; ]
@@ -207,8 +576,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 to find out where &lt;code&gt;$rootmnt&lt;/code&gt; is set, you won&amp;rsquo;t find it. It is set in &lt;code&gt;initramfs&lt;/code&gt;&amp;rsquo;s &lt;code&gt;init&lt;/code&gt;
 script:&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896162000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896162000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;init&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400178941000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178941000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;init&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;export rootmnt=/root&lt;/code&gt;&lt;/pre&gt;
@@ -230,8 +599,8 @@ but looks for this path instead.&lt;/p&gt;
 &lt;code&gt;/live&lt;/code&gt; dir in my luks -&amp;gt; lvm -&amp;gt; xfs setup ?&lt;/p&gt;
 &lt;p&gt;At the top of live-boot script, it tries to decrypt partitions.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896194000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896194000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400178972000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400178972000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;	if [ -x /scripts/local-top/cryptroot ]
@@ -412,14 +781,14 @@ mount: exec /Library/Filesystems/ext4.fs/Contents/Resources/mount_ext4 for /User
 &lt;p&gt;Looks like rasp pi 5 has a &lt;a href=&#34;https://forums.raspberrypi.com/viewtopic.php?t=358296&#34;&gt;dedicated uart&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;As per &lt;a href=&#34;https://github.com/raspberrypi/documentation/issues/3239#issuecomment-1819869459&#34;&gt;this&lt;/a&gt; and &lt;a href=&#34;https://pinout.xyz/pinout/uart&#34;&gt;this&lt;/a&gt; I need to explicitly enable &lt;code&gt;uart0&lt;/code&gt; as default uart is debug uart on 3 pin dedicated header (ie not on pin 14 and 15).&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896585000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896585000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;config.txt&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400179341000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400179341000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;config.txt&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;dtparam=uart0_console   # Enable UART0/ttyAMA0 on GPIO 14 &amp;amp; 15 and make it the console UART&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;&lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1761830563896600000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1761830563896600000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;cmdline.txt&lt;/span&gt;
+  &lt;input id=&#34;code-1766700400179371000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1766700400179371000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;cmdline.txt&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;console=serial0,115200&lt;/code&gt;&lt;/pre&gt;
@@ -1104,6 +1473,16 @@ Follow the white rabbit.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;We&amp;rsquo;re in. I&amp;rsquo;ve to find Trinity.&lt;/p&gt;
 </content>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hritik.sh/posts/template/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hritik.sh/posts/template/</guid>
+      <description></description>
+      <content></content>
     </item>
     
   </channel>

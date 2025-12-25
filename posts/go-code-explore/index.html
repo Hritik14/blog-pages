@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
   
-    <title>Posts :: </title>
+    <title>Code exploration in go :: </title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="" />
+<meta name="description" content="Someone suggested Go&rsquo;s profiler to explore the codebase. It makes sense, you could figure out the slow parts of your code, but what about other parts. What about parts that aren&rsquo;t slow yet relevant ? Since the profiler takes samples 100 times per second interval, it is bound to miss the fast functions.
+" />
 <meta name="keywords" content="" />
 
   <meta name="robots" content="noodp" />
 
-<link rel="canonical" href="https://hritik.sh/posts/" />
+<link rel="canonical" href="http://localhost:1313/posts/go-code-explore/" />
 
 
 
@@ -23,15 +24,15 @@
   
   
   
-  <link rel="stylesheet" href="https://hritik.sh/styles.css">
+  <link rel="stylesheet" href="http://localhost:1313/styles.css">
 
 
 
-<link rel="stylesheet" href="https://hritik.sh/style.css">
+<link rel="stylesheet" href="http://localhost:1313/style.css">
 
 
 
-  <link rel="shortcut icon" href="https://hritik.sh/favicon.png">
+  <link rel="shortcut icon" href="http://localhost:1313/favicon.png">
 
 
 
@@ -45,24 +46,25 @@
 
 
 <meta property="og:locale" content="en" />
-<meta property="og:type" content="website" />
-<meta property="og:title" content="Posts">
-<meta property="og:description" content="" />
-<meta property="og:url" content="https://hritik.sh/posts/" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Code exploration in go">
+<meta property="og:description" content="Someone suggested Go&rsquo;s profiler to explore the codebase. It makes sense, you could figure out the slow parts of your code, but what about other parts. What about parts that aren&rsquo;t slow yet relevant ? Since the profiler takes samples 100 times per second interval, it is bound to miss the fast functions.
+" />
+<meta property="og:url" content="http://localhost:1313/posts/go-code-explore/" />
 <meta property="og:site_name" content="" />
 
   
-    <meta property="og:image" content="https://hritik.sh/favicon.png">
+    <meta property="og:image" content="http://localhost:1313/favicon.png">
   
 
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 
 
+  <meta property="article:published_time" content="2025-12-01 00:00:00 &#43;0000 UTC" />
 
 
 
-  <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="" />
 
 
 
@@ -185,89 +187,57 @@
 
   <div class="content">
     
+<article class="post">
+  <h1 class="post-title">
+    <a href="http://localhost:1313/posts/go-code-explore/">Code exploration in go</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-12-01</time></div>
+
   
-  <div class="posts">
-    
-      <article class="post on-list">
-        <h1 class="post-title">
-          <a href="https://hritik.sh/posts/secarmy-unintended-ctf/">Grayhat -&gt; Secarmy CTF :: The Unintended Way</a>
-        </h1>
-        <div class="post-meta"><time class="post-date">2020-11-02</time></div>
+  
 
+
+  
+
+  <div class="post-content"><div>
+        <p>Someone suggested <a href="https://go.dev/blog/pprof">Go&rsquo;s profiler</a> to explore the codebase. It makes sense, you could
+figure out the slow parts of your code, but what about other parts. What about parts
+that aren&rsquo;t slow yet relevant ? Since the profiler takes samples 100 times per second interval,
+it is bound to miss the fast functions.</p>
+<p>&hellip; Tip:</p>
+<p>Many go programs will have <code>--cpuprofile=program.prof</code> option built-in, since it&rsquo;s common
+to have profiling code present for debugging. Then <code>go tool pprof -http=127.0.0.1:8081 &lt;program&gt; &lt;program.prof&gt;</code>
+gives a nice web interface to analyze the profiling data.</p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
         
-
         
-
-
-        <div class="post-preview">
-          <a href="https://hritik.sh/posts/secarmy-unintended-ctf/">
-          
-            Once upon a time, a CTF was held. There were many ways to solve it, though none knew that one was The Unintended Way. Although, it does sound pretty unconventional and sad that in a CTF where you explore all the paths and explore wild possibilities, one of them was tagged as unintended and thus, invalid.
-
-          
-          </a>
-        </div>
-
-      </article>
-    
-      <article class="post on-list">
-        <h1 class="post-title">
-          <a href="https://hritik.sh/posts/multi-net/">Multiple connections - Faster internet ?</a>
-        </h1>
-        <div class="post-meta"><time class="post-date">2020-04-20</time></div>
-
+        <span class="button next">
+            <a href="http://localhost:1313/posts/alone/">
+                <span class="button__text">You are alone</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
         
-
-        
-
-
-        <div class="post-preview">
-          <a href="https://hritik.sh/posts/multi-net/">
-          
-             Neo, we must find a faster link, connection to the Matrix is congested. Hurry !
-Kernel supports a magical module, called bonding
-
-          
-          </a>
-        </div>
-
-      </article>
-    
-      <article class="post on-list">
-        <h1 class="post-title">
-          <a href="https://hritik.sh/posts/template/"></a>
-        </h1>
-        <div class="post-meta"></div>
-
-        
-
-        
-
-
-        <div class="post-preview">
-          <a href="https://hritik.sh/posts/template/">
-          
-            
-          
-          </a>
-        </div>
-
-      </article>
-    
-
-    <div class="pagination">
-  <div class="pagination__buttons">
-    
-      <a href="/posts/" class="button previous">
-        <span class="button__icon">←</span>
-        <span class="button__text">Newer posts</span>
-      </a>
-    
-    
-  </div>
+    </div>
 </div>
 
-  </div>
+  
+
+  
+    
+
+  
+</article>
 
   </div>
 

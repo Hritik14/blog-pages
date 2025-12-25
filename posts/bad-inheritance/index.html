@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>What happens when your child inherits a breakpoint :: </title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content=" If a process fork()s while debugging, will the child inherit the breakpoint ?
+In a rush ? Go to takeaways
+How does a debugger attach to a running process forking into 2 ? Will it automatically attach to two processes ? What if we change a function while we have a breakpoint, will it affect child and parent both ? Let&rsquo;s try it out.
+" />
+<meta name="keywords" content="c, debugging, child, parent, pidknapping, debugger, brk" />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://hritik.sh/posts/bad-inheritance/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://hritik.sh/styles.css">
+
+
+
+<link rel="stylesheet" href="https://hritik.sh/style.css">
+
+
+
+  <link rel="shortcut icon" href="https://hritik.sh/favicon.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="https://hritik.sh" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="What happens when your child inherits a breakpoint">
+<meta property="og:description" content=" If a process fork()s while debugging, will the child inherit the breakpoint ?
+In a rush ? Go to takeaways
+How does a debugger attach to a running process forking into 2 ? Will it automatically attach to two processes ? What if we change a function while we have a breakpoint, will it affect child and parent both ? Let&rsquo;s try it out.
+" />
+<meta property="og:url" content="https://hritik.sh/posts/bad-inheritance/" />
+<meta property="og:site_name" content="" />
+
+  
+    <meta property="og:image" content="https://hritik.sh/favicon.png">
+  
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2025-12-25 00:00:00 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="green">
+
+
+<div class="container full">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Hritik&#39;s Blog
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/ctf-writeups">Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14">Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml">RSS</a></li>
+        
+      
+        
+          <li><a href="/cheatsheets">Cheatsheets</a></li>
+        
+      
+        
+          <li><a href="/about">About</a></li>
+        
+      
+        
+          <li><a href="mailto:ping@hritik.sh">Contact</a></li>
+        
+      
+        
+          <li><a href="https://www.linkedin.com/in/hritikvijay/">LinkedIn</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/ctf-writeups" >Writeups</a></li>
+        
+      
+        
+          <li><a href="https://github.com/hritik14" >Github</a></li>
+        
+      
+        
+          <li><a href="/index.xml" >RSS</a></li>
+        
+      
+      
+        <li>
+          <ul class="menu">
+            <li class="menu__trigger">Show more&nbsp;▾</li>
+            <li>
+              <ul class="menu__dropdown">
+                
+                  
+                    <li><a href="/cheatsheets" >Cheatsheets</a></li>
+                  
+                
+                  
+                    <li><a href="/about" >About</a></li>
+                  
+                
+                  
+                    <li><a href="mailto:ping@hritik.sh" >Contact</a></li>
+                  
+                
+                  
+                    <li><a href="https://www.linkedin.com/in/hritikvijay/" >LinkedIn</a></li>
+                  
+                
+              </ul>
+            </li>
+          </ul>
+        </li>
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://hritik.sh/posts/bad-inheritance/">What happens when your child inherits a breakpoint</a>
+  </h1>
+  <div class="post-meta"><time class="post-date">2025-12-25</time></div>
+
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <blockquote>
+<p>If a process <code>fork()</code>s while debugging, will the child inherit the breakpoint ?</p></blockquote>
+<p><em>In a rush ? Go to <a href="/posts/bad-inheritance/#takeaways">takeaways</a></em></p>
+<p>How does a debugger attach to a running process forking into 2 ? Will it automatically attach to
+two processes ? What if we change a function while we have a breakpoint, will it
+affect child and parent both ? Let&rsquo;s try it out.</p>
+<pre class="language-c"><code>#include&lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+
+void answer(){
+  // breakpoint
+  int ans = 42;
+  printf(&#34;the answer to life is %d\n&#34;, ans);
+}
+
+int main(){
+  int naptime = 5;
+  printf(&#34;Hello, program start\n&#34;);
+  
+  pid_t cpid = fork();
+  pid_t mypid = getpid();
+  printf(&#34;Child created, pid: %d\n&#34;, cpid); 
+
+  if (cpid == 0) {
+    printf(&#34;[%d] I&#39;m the child. cpid: %d\n&#34;, mypid, cpid); 
+  } else {
+    printf(&#34;[%d] I&#39;m the parent. cpid: %d\n&#34;, mypid, cpid); 
+  }
+
+  printf(&#34;Sleeping for %d secs\n&#34;, naptime); 
+  sleep(naptime);
+  printf(&#34;[%d] Awake!\n&#34;, mypid); 
+
+  answer();
+
+  printf(&#34;[%d] bye ! \n&#34;, mypid);
+
+  return 0;
+}</code></pre><p>This simple program creates a child fork, sleeps for 5 seconds, wakes up and then
+calls <code>answer()</code>.</p>
+<p>Without a breakpoint, our output is something like this:</p>
+<pre class="language-text"><code>; ./fork
+Hello, program start
+Child created, pid: 66817
+[66816] I&#39;m the parent. cpid: 66817
+Sleeping for 5 secs
+Child created, pid: 0
+[66817] I&#39;m the child. cpid: 0
+Sleeping for 5 secs
+[66817] Awake!
+[66817] the answer to life is 42
+[66817] bye !
+[66816] Awake!
+[66816] the answer to life is 42
+[66816] bye !</code></pre><blockquote>
+<p>Upcoming fun fact.
+During the sleep, the process relationship looks sane enough, child belongs to parent:</p>
+<pre class="language-text"><code>; pstree -p 66817
+-&#43;= 00001 root /sbin/launchd
+ \-&#43;= 02074 neo tmux
+   \-&#43;= 66629 neo -zsh
+     \-&#43;= 66816 neo ./fork
+       \--- 66817 neo ./fork</code></pre></blockquote>
+<p>Let&rsquo;s rerun this in <code>lldb</code> (gdb for mac) and break at <code>answer</code>. Then we can change <code>ans</code> from 42 to 29 and see what
+happens to the child.</p>
+<pre class="language-c"><code>; gcc fork.c -g -o fork
+; lldb fork
+(lldb) target create &#34;fork&#34;
+Current executable set to &#39;/Users/neo/raw/fork&#39; (arm64).
+(lldb) b answer
+Breakpoint 1: where = fork`answer &#43; 12 at fork.c:7:7, address = 0x000000010000046c
+(lldb) r
+Process 61763 launched: &#39;/Users/neo/raw/fork&#39; (arm64)
+Hello, program start
+Child created, pid: 61773
+[61763] I&#39;m the parent. cpid: 61773
+Sleeping for 5 secs
+Child created, pid: 0
+[61773] I&#39;m the child. cpid: 0
+Sleeping for 5 secs
+[61773] Awake!
+[61763] Awake!
+Process 61763 stopped
+* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = breakpoint 1.1
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&gt; 7      int ans = 42;
+   8      printf(&#34;[%d] the answer to life is %d\n&#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+(lldb) n
+Process 61763 stopped
+* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = step over
+    frame #0: 0x0000000100000474 fork`answer at fork.c:8:45
+   5    void answer(){
+   6      // breakpoint
+   7      int ans = 42;
+-&gt; 8      printf(&#34;[%d] the answer to life is %d\n&#34;, getpid(), ans);
+   9    }
+   10
+   11   int main(){
+Target 0: (fork) stopped.
+(lldb) expr ans = 29
+(int) $0 = 29
+(lldb) c
+Process 61763 resuming
+[61763] the answer to life is 29
+[61763] bye !
+Process 61763 exited with status = 0 (0x00000000)
+(lldb)</code></pre><blockquote>
+<p>Note that we must change ans on line 8, since at line 7 ans is uninitialized. After line 7 is executed, any
+value we set will be overwritten.</p></blockquote>
+<p>Output contains only one answer <code>29</code> and a single <code>bye</code> from parent. What happened to our child&rsquo;s output ?
+Probably this debugger only captures stdout of a single process, but we did get two <code>Awake</code>s from child and
+parent. The stdout split happened only after the breakpoint. Let&rsquo;s get another debugger and attach it to child as well.</p>
+<div class="collapsable-code">
+  <input id="code-1766700400158800000" type="checkbox"  />
+  <label for="code-1766700400158800000"><span class="collapsable-code__language">c</span><span class="collapsable-code__title">parent</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-c"><code>; lldb fork
+(lldb) target create &#34;fork&#34;
+Current executable set to &#39;/Users/neo/raw/fork&#39; (arm64).
+(lldb) b answer
+Breakpoint 1: where = fork`answer &#43; 12 at fork.c:7:7, address = 0x000000010000046c
+(lldb) r
+Process 62875 launched: &#39;/Users/neo/raw/fork&#39; (arm64)
+Hello, program start
+Child created, pid: 62878
+[62875] I&#39;m the parent. cpid: 62878
+Sleeping for 5 secs
+Child created, pid: 0
+[62878] I&#39;m the child. cpid: 0
+Sleeping for 5 secs
+[62875] Awake!
+Process 62875 stopped
+* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = breakpoint 1.1
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&gt; 7      int ans = 42;
+   8      printf(&#34;[%d] the answer to life is %d\n&#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+[62878] Awake!
+(lldb)</code></pre>
+</div><div class="collapsable-code">
+  <input id="code-1766700400158832000" type="checkbox"  />
+  <label for="code-1766700400158832000"><span class="collapsable-code__language">c</span><span class="collapsable-code__title">child</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-c"><code>; lldb -p 62878
+(lldb) process attach --pid 62878
+Process 62878 stopped
+* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = signal SIGSTOP
+    frame #0: 0x00000001830864e8 libsystem_kernel.dylib`__semwait_signal &#43; 8
+libsystem_kernel.dylib`__semwait_signal:
+-&gt;  0x1830864e8 &lt;&#43;8&gt;:  b.lo   0x183086508    ; &lt;&#43;40&gt;
+    0x1830864ec &lt;&#43;12&gt;: pacibsp
+    0x1830864f0 &lt;&#43;16&gt;: stp    x29, x30, [sp, #-0x10]!
+    0x1830864f4 &lt;&#43;20&gt;: mov    x29, sp
+Target 0: (fork) stopped.
+Executable binary set to &#34;/Users/neo/raw/fork&#34;.
+Architecture set to: arm64-apple-macosx-.
+(lldb) c
+Process 62878 resuming
+Process 62878 stopped
+* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = EXC_BREAKPOINT (code=1, subcode=0x10000046c)
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&gt; 7      int ans = 42;
+   8      printf(&#34;[%d] the answer to life is %d\n&#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+(lldb) n
+Process 62878 stopped
+* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = EXC_BREAKPOINT (code=1, subcode=0x10000046c)
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&gt; 7      int ans = 42;
+   8      printf(&#34;[%d] the answer to life is %d\n&#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+(lldb) c
+Process 62878 resuming
+Process 62878 stopped
+* thread #1, queue = &#39;com.apple.main-thread&#39;, stop reason = EXC_BREAKPOINT (code=1, subcode=0x10000046c)
+    frame #0: 0x000000010000046c fork`answer at fork.c:7:7
+   4
+   5    void answer(){
+   6      // breakpoint
+-&gt; 7      int ans = 42;
+   8      printf(&#34;[%d] the answer to life is %d\n&#34;, getpid(), ans);
+   9    }
+   10
+Target 0: (fork) stopped.
+(lldb)</code></pre>
+</div><p>The first breakpoint in child is set by the debugger (SIGSTOP) to hook to this process. The second breakpoint,
+however, is our breakpoint that we set in the parent process. So, yes ! Attaching a breakpoint to a parent
+does propagate it to the child.
+But, why doesn&rsquo;t the child continue ? Hitting <code>n</code>ext or even <code>c</code>ontinue does nothing in the child&rsquo;s debugger.
+The child is evidently stuck!</p>
+<blockquote>
+<p>Fun fact.
+Let&rsquo;s check the <code>pstree</code> at this moment in time:</p>
+<pre class="language-sh"><code>; pstree -p 62875 # parent
+-&#43;= 00001 root /sbin/launchd
+ \-&#43;= 02074 neo tmux
+   \-&#43;= 60121 neo -zsh
+     \-&#43;= 62867 neo /Library/Developer/CommandLineTools/usr/bin/lldb fork
+       \-&#43;= 62876 neo /Library/Developer/CommandLineTools/Library/PrivateFrameworks
+         \--= 62875 neo /Users/neo/raw/fork
+
+; pstree -p 62878 # child
+-&#43;= 00001 root /sbin/launchd
+ \-&#43;= 02074 neo tmux
+   \-&#43;= 60276 neo -zsh
+     \-&#43;= 62898 neo /Library/Developer/CommandLineTools/usr/bin/lldb -p 62878
+       \-&#43;= 62899 neo /Library/Developer/CommandLineTools/Library/PrivateFrameworks
+         \--- 62878 neo /Users/neo/raw/fork</code></pre><p>The child no longer belongs to the parent. The child has effectively been kidnapped by lldb !</p></blockquote>
+<p>A disassemble shows the current instruction pointer on a <code>brk</code> instruction.</p>
+<div class="collapsable-code">
+  <input id="code-1766700400158864000" type="checkbox"  />
+  <label for="code-1766700400158864000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">child</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-nasm"><code>(lldb) disassemble
+fork`answer:
+    0x100000460 &lt;&#43;0&gt;:  sub    sp, sp, #0x30
+    0x100000464 &lt;&#43;4&gt;:  stp    x29, x30, [sp, #0x20]
+    0x100000468 &lt;&#43;8&gt;:  add    x29, sp, #0x20
+-&gt;  0x10000046c &lt;&#43;12&gt;: brk    #0
+    0x100000470 &lt;&#43;16&gt;: stur   w8, [x29, #-0x4]
+    0x100000474 &lt;&#43;20&gt;: bl     0x1000005bc    ; symbol stub for: getpid
+    0x100000478 &lt;&#43;24&gt;: ldur   w8, [x29, #-0x4]
+    0x10000047c &lt;&#43;28&gt;: mov    x9, sp
+    0x100000480 &lt;&#43;32&gt;: mov    x10, x0
+    0x100000484 &lt;&#43;36&gt;: str    x10, [x9]
+    0x100000488 &lt;&#43;40&gt;: str    x8, [x9, #0x8]
+    0x10000048c &lt;&#43;44&gt;: adrp   x0, 0
+    0x100000490 &lt;&#43;48&gt;: add    x0, x0, #0x5e0 ; &#34;[%d] the answer to life is %d\n&#34;
+    0x100000494 &lt;&#43;52&gt;: bl     0x1000005c8    ; symbol stub for: printf
+    0x100000498 &lt;&#43;56&gt;: ldp    x29, x30, [sp, #0x20]
+    0x10000049c &lt;&#43;60&gt;: add    sp, sp, #0x30
+    0x1000004a0 &lt;&#43;64&gt;: ret</code></pre>
+</div><p>For reference, here&rsquo;s how it looks in the parent</p>
+<div class="collapsable-code">
+  <input id="code-1766700400158881000" type="checkbox"  />
+  <label for="code-1766700400158881000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">parent</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-nasm"><code>(lldb) disassemble
+fork`answer:
+    0x100000460 &lt;&#43;0&gt;:  sub    sp, sp, #0x30
+    0x100000464 &lt;&#43;4&gt;:  stp    x29, x30, [sp, #0x20]
+    0x100000468 &lt;&#43;8&gt;:  add    x29, sp, #0x20
+-&gt;  0x10000046c &lt;&#43;12&gt;: mov    w8, #0x2a ; =42
+    0x100000470 &lt;&#43;16&gt;: stur   w8, [x29, #-0x4]
+    0x100000474 &lt;&#43;20&gt;: bl     0x1000005bc    ; symbol stub for: getpid
+    0x100000478 &lt;&#43;24&gt;: ldur   w8, [x29, #-0x4]
+    0x10000047c &lt;&#43;28&gt;: mov    x9, sp
+    0x100000480 &lt;&#43;32&gt;: mov    x10, x0
+    0x100000484 &lt;&#43;36&gt;: str    x10, [x9]
+    0x100000488 &lt;&#43;40&gt;: str    x8, [x9, #0x8]
+    0x10000048c &lt;&#43;44&gt;: adrp   x0, 0
+    0x100000490 &lt;&#43;48&gt;: add    x0, x0, #0x5e0 ; &#34;[%d] the answer to life is %d\n&#34;
+    0x100000494 &lt;&#43;52&gt;: bl     0x1000005c8    ; symbol stub for: printf
+    0x100000498 &lt;&#43;56&gt;: ldp    x29, x30, [sp, #0x20]
+    0x10000049c &lt;&#43;60&gt;: add    sp, sp, #0x30
+    0x1000004a0 &lt;&#43;64&gt;: ret</code></pre>
+</div><p>A <code>mov</code> instruction has been replaced by <code>brk</code> in the child. Since <code>brk</code> does not increase the program counter,
+the instruction pointer remains on the same <code>brk</code> instruction and even hitting <code>c</code>continue does nothing
+and reexecutes <code>brk</code> instruction indefinitely.</p>
+<p>This is how debuggers work internally. They replace a single instruction at the point of breakpoint with a <code>brk</code>,
+whenever the program hits this <code>brk</code>, it stops with <code>EXC_BREAKPOINT</code> and the debugger <em>replaces the <code>brk</code> with
+the actual instruction.</em></p>
+<p>Since, our second debugger knows nothing about this <code>brk</code> trick being present in the program (and which
+instruction to replace it with), it does not replace <code>brk</code> during the breakpoint hit as it assumes <code>brk</code> is a part of the
+program and keeps executing indefinitily without ever increasing program counter.</p>
+<p>This is why we never got our <code>bye</code> and answer to life from the child. It was stuck forever in the <code>brk</code>
+until the OS decided to kill it after the parent died.</p>
+<p>Would stepping over this instruction manually in the debugger solve our issue ?</p>
+<div class="collapsable-code">
+  <input id="code-1766700400158919000" type="checkbox"  />
+  <label for="code-1766700400158919000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">child</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-nasm"><code>(lldb) expr $pc = 0x100000470
+(unsigned long) $0 = 4294968432
+
+(lldb) disassemble
+fork`answer:
+    0x100000460 &lt;&#43;0&gt;:  sub    sp, sp, #0x30
+    0x100000464 &lt;&#43;4&gt;:  stp    x29, x30, [sp, #0x20]
+    0x100000468 &lt;&#43;8&gt;:  add    x29, sp, #0x20
+    0x10000046c &lt;&#43;12&gt;: brk    #0
+-&gt;  0x100000470 &lt;&#43;16&gt;: stur   w8, [x29, #-0x4]
+    0x100000474 &lt;&#43;20&gt;: bl     0x1000005bc    ; symbol stub for: getpid
+    0x100000478 &lt;&#43;24&gt;: ldur   w8, [x29, #-0x4]
+    0x10000047c &lt;&#43;28&gt;: mov    x9, sp
+    0x100000480 &lt;&#43;32&gt;: mov    x10, x0
+    0x100000484 &lt;&#43;36&gt;: str    x10, [x9]
+    0x100000488 &lt;&#43;40&gt;: str    x8, [x9, #0x8]
+    0x10000048c &lt;&#43;44&gt;: adrp   x0, 0
+    0x100000490 &lt;&#43;48&gt;: add    x0, x0, #0x5e0 ; &#34;[%d] the answer to life is %d\n&#34;
+    0x100000494 &lt;&#43;52&gt;: bl     0x1000005c8    ; symbol stub for: printf
+    0x100000498 &lt;&#43;56&gt;: ldp    x29, x30, [sp, #0x20]
+    0x10000049c &lt;&#43;60&gt;: add    sp, sp, #0x30
+    0x1000004a0 &lt;&#43;64&gt;: ret
+
+(lldb) c
+Process 62878 resuming
+Process 62878 exited with status = 0 (0x00000000)</code></pre>
+</div><p>Yes ! ?</p>
+<p>Sadly, no. The stdout is still connected to the parent <code>lldb</code> and we got a garbage answer from child.</p>
+<div class="collapsable-code">
+  <input id="code-1766700400158959000" type="checkbox"  />
+  <label for="code-1766700400158959000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">parent</span>
+    <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
+  </label>
+  <pre class="language-nasm"><code>[62878] the answer to life is -324843284
+[62878] bye !
+(lldb) c
+Process 62875 resuming
+[62875] the answer to life is 42
+[62875] bye !</code></pre>
+</div><p>This is because although we stepped over the <code>brk</code> instruction in the child, we didn&rsquo;t <em>replace</em> it with an
+approprate original instruction (here: <code>0x10000046c &lt;+12&gt;: mov    w8, #0x2a ; =42</code>).
+This line was responsible for initializing our <code>ans</code> variable in the child.</p>
+<p>Of course, we could run the missing instruction manually in the child&rsquo;s debugger to fill the missing link, and
+everything comes back to normal.</p>
+<h2 id="takeaways">Takeaways<a href="#takeaways" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ol>
+<li><code>brk</code> is actually replaced not added, and debugger knows when to replace back with original instruction.</li>
+<li>Debugger, if attached on child (created by fork()), it will steal the child from parent process</li>
+<li>When fork()-ed, breakpoint instructions are also forked.</li>
+<li>If a debugger is atteched to the new child, the BRK instruction is also copid, the child stops at that instruction but debugger does not know about this BRK and assumes it as program&rsquo;s intended instruction.</li>
+<li>Cpu will not increase program counter (pc) when <code>brk</code> is hit.</li>
+</ol>
+<h2 id="credits">Credits<a href="#credits" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>We stumbled upon this while pondering over with <a href="https://x.com/youhaveme__">Roshan</a> and
+<a href="https://x.com/0xsapra">Sapra</a></p>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://hritik.sh/posts/airtel-ipv6-opening-ports/">
+                <span class="button__text">Open ports on local ipv6 devices to the internet</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright">
+        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>
