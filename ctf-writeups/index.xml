@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title></title>
+    <title>Hritik&#39;s Blog</title>
     <link>https://hritik.sh/ctf-writeups/</link>
-    <description>Recent content on </description>
+    <description>Recent content on Hritik&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
+    <managingEditor>hey at hritik.sh (Hritik V)</managingEditor>
+    <webMaster>hey at hritik.sh (Hritik V)</webMaster>
     <lastBuildDate>Wed, 02 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://hritik.sh/ctf-writeups/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bsides Bangalore 2024</title>
       <link>https://hritik.sh/ctf-writeups/bsides-bangalore-2024/</link>
       <pubDate>Sun, 30 Jun 2024 00:00:00 +0000</pubDate>
-      
+      <author>hey at hritik.sh (Hritik V)</author>
       <guid>https://hritik.sh/ctf-writeups/bsides-bangalore-2024/</guid>
       <description>&lt;h1 id=&#34;forensics-no-malware-on-file&#34;&gt;Forensics: No malware on file&lt;/h1&gt;
-&lt;p&gt;Not having access to vol2 or a windows box, I wasted entire time getting vol2 working on arm or windows running. Biggest fault!&lt;/p&gt;</description>
-      <content>&lt;h1 id=&#34;forensics-no-malware-on-file&#34;&gt;Forensics: No malware on file&lt;/h1&gt;
 &lt;p&gt;Not having access to vol2 or a windows box, I wasted entire time getting vol2 working on arm or windows running. Biggest fault!&lt;/p&gt;
 &lt;p&gt;Better way (after CTF endend): With calm mind,&lt;/p&gt;
 &lt;ul&gt;
@@ -268,7 +268,7 @@ If you&amp;#39;d like an additional hint, it&amp;#39;s on this webserver.&lt;/co
 It&amp;#39;s not UDP.&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Get the flag&lt;/p&gt;
 &lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;# nmap 192.168.0.132 -sO -T5
 132      open   sctp
-# ncat --sctp 192.168.0.132 10&lt;/code&gt;&lt;/pre&gt;</content>
+# ncat --sctp 192.168.0.132 10&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
   </channel>

@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Cheatsheets on </title>
+    <title>Cheatsheets on Hritik&#39;s Blog</title>
     <link>https://hritik.sh/cheatsheets/</link>
-    <description>Recent content in Cheatsheets on </description>
+    <description>Recent content in Cheatsheets on Hritik&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
+    <managingEditor>hey at hritik.sh (Hritik V)</managingEditor>
+    <webMaster>hey at hritik.sh (Hritik V)</webMaster>
     <lastBuildDate>Sat, 28 Jun 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://hritik.sh/cheatsheets/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Volatality Cheatsheet (2 and 3, but mostly 3)</title>
       <link>https://hritik.sh/cheatsheets/volatality/</link>
       <pubDate>Sun, 30 Jun 2024 00:00:00 +0000</pubDate>
-      
+      <author>hey at hritik.sh (Hritik V)</author>
       <guid>https://hritik.sh/cheatsheets/volatality/</guid>
       <description>&lt;p&gt;Good reference: &lt;a href=&#34;https://andreafortuna.org/2017/07/31/volatility-my-own-cheatsheet-part-6-windows-registry/&#34;&gt;https://andreafortuna.org/2017/07/31/volatility-my-own-cheatsheet-part-6-windows-registry/&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id=&#34;dump-registry&#34;&gt;Dump registry&lt;/h2&gt;
@@ -22,18 +24,8 @@
 &lt;li&gt;
 &lt;p&gt;vol3 -f voltest.dmp -o output_dir windows.registry.hivelist &amp;ndash;dump&lt;/p&gt;
 &lt;/li&gt;
-&lt;/ul&gt;</description>
-      <content>&lt;p&gt;Good reference: &lt;a href=&#34;https://andreafortuna.org/2017/07/31/volatility-my-own-cheatsheet-part-6-windows-registry/&#34;&gt;https://andreafortuna.org/2017/07/31/volatility-my-own-cheatsheet-part-6-windows-registry/&lt;/a&gt;&lt;/p&gt;
-&lt;h2 id=&#34;dump-registry&#34;&gt;Dump registry&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;vol2 -f voltest.dmp &amp;ndash;profile=Win7SP1x86 dumpregistry -D output_dir&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;vol3 -f voltest.dmp -o output_dir windows.registry.hivelist &amp;ndash;dump&lt;/p&gt;
-&lt;/li&gt;
 &lt;/ul&gt;
-</content>
+</description>
     </item>
     
   </channel>

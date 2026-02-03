@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   
-    <title>Rasp Pi Serial Console :: </title>
+    <title>Rasp Pi Serial Console :: Hritik&#39;s Blog</title>
   
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,7 +53,7 @@ Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp
 Simplest is to get an HDMI monitor and see what&rsquo;s going on, but alas! Rasp pi changed their HDMI from mini to micro, and I only have a mini adapter from pi zero.
 " />
 <meta property="og:url" content="https://hritik.sh/posts/rasp-pi-serial-console/" />
-<meta property="og:site_name" content="" />
+<meta property="og:site_name" content="Hritik&#39;s Blog" />
 
   
     <meta property="og:image" content="https://hritik.sh/favicon.png">
@@ -265,14 +265,14 @@ mount: exec /Library/Filesystems/ext4.fs/Contents/Resources/mount_ext4 for /User
 <p>Looks like rasp pi 5 has a <a href="https://forums.raspberrypi.com/viewtopic.php?t=358296">dedicated uart</a>.</p>
 <p>As per <a href="https://github.com/raspberrypi/documentation/issues/3239#issuecomment-1819869459">this</a> and <a href="https://pinout.xyz/pinout/uart">this</a> I need to explicitly enable <code>uart0</code> as default uart is debug uart on 3 pin dedicated header (ie not on pin 14 and 15).</p>
 <div class="collapsable-code">
-  <input id="code-1766700400163391000" type="checkbox"  />
-  <label for="code-1766700400163391000"><span class="collapsable-code__title">config.txt</span>
+  <input id="code-1770130970065998000" type="checkbox"  />
+  <label for="code-1770130970065998000"><span class="collapsable-code__title">config.txt</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-text"><code>dtparam=uart0_console   # Enable UART0/ttyAMA0 on GPIO 14 &amp; 15 and make it the console UART</code></pre>
 </div><div class="collapsable-code">
-  <input id="code-1766700400163406000" type="checkbox"  />
-  <label for="code-1766700400163406000"><span class="collapsable-code__title">cmdline.txt</span>
+  <input id="code-1770130970066010000" type="checkbox"  />
+  <label for="code-1770130970066010000"><span class="collapsable-code__title">cmdline.txt</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-text"><code>console=serial0,115200</code></pre>
@@ -402,7 +402,7 @@ A: because new firmwares have fallback - if debug uart is not connected, it fall
   <div class="footer__inner">
     
       <div class="copyright">
-        <span>© 2025 Powered by <a href="https://gohugo.io">Hugo</a></span>
+        <span>© 2026 Powered by <a href="https://gohugo.io">Hugo</a></span>
     
       <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
       </div>
