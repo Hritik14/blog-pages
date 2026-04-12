@@ -135,8 +135,8 @@ value we set will be overwritten.&lt;/p&gt;&lt;/blockquote&gt;
 Probably this debugger only captures stdout of a single process, but we did get two &lt;code&gt;Awake&lt;/code&gt;s from child and
 parent. The stdout split happened only after the breakpoint. Let&amp;rsquo;s get another debugger and attach it to child as well.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093069000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093069000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984431000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984431000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-c&#34;&gt;&lt;code&gt;; lldb fork
@@ -168,8 +168,8 @@ Target 0: (fork) stopped.
 [62878] Awake!
 (lldb)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;&lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093123000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093123000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984453000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984453000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-c&#34;&gt;&lt;code&gt;; lldb -p 62878
@@ -249,8 +249,8 @@ Let&amp;rsquo;s check the &lt;code&gt;pstree&lt;/code&gt; at this moment in time
          \--- 62878 neo /Users/neo/raw/fork&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The child no longer belongs to the parent. The child has effectively been kidnapped by lldb !&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;A disassemble shows the current instruction pointer on a &lt;code&gt;brk&lt;/code&gt; instruction.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093160000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093160000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984485000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984485000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-nasm&#34;&gt;&lt;code&gt;(lldb) disassemble
@@ -274,8 +274,8 @@ fork`answer:
     0x1000004a0 &amp;lt;&amp;#43;64&amp;gt;: ret&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;&lt;p&gt;For reference, here&amp;rsquo;s how it looks in the parent&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093180000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093180000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984502000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984502000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-nasm&#34;&gt;&lt;code&gt;(lldb) disassemble
@@ -310,8 +310,8 @@ program and keeps executing indefinitily without ever increasing program counter
 until the OS decided to kill it after the parent died.&lt;/p&gt;
 &lt;p&gt;Would stepping over this instruction manually in the debugger solve our issue ?&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093207000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093207000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984524000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984524000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;child&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-nasm&#34;&gt;&lt;code&gt;(lldb) expr $pc = 0x100000470
@@ -343,8 +343,8 @@ Process 62878 exited with status = 0 (0x00000000)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;&lt;p&gt;Yes ! ?&lt;/p&gt;
 &lt;p&gt;Sadly, no. The stdout is still connected to the parent &lt;code&gt;lldb&lt;/code&gt; and we got a garbage answer from child.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093230000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093230000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984541000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984541000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;nasm&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;parent&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-nasm&#34;&gt;&lt;code&gt;[62878] the answer to life is -324843284
@@ -438,8 +438,8 @@ Since I just used &lt;code&gt;grml&lt;/code&gt; via a pendrive, can I have it bo
 &lt;p&gt;Well, not every no is a no.&lt;/p&gt;
 &lt;p&gt;grml uses &lt;code&gt;grub&lt;/code&gt; as bootloader with the following entry:&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093727000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093727000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;cfg&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;boot/grub/grmlsmallamd64_default.cfg&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984940000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984940000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;cfg&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;boot/grub/grmlsmallamd64_default.cfg&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-cfg&#34;&gt;&lt;code&gt;menuentry &amp;#34;grml-small-amd64 2025.08&amp;#34; {
@@ -464,8 +464,8 @@ So, lets see how &lt;code&gt;live-boot&lt;/code&gt; works.&lt;/p&gt;
 &lt;li&gt;
 &lt;p&gt;Try 60 times, 1 per second, to find a live-bootable file system&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093779000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093779000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984982000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984982000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;# Scan local devices for the image
@@ -487,8 +487,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;Unless &lt;code&gt;LIVE_MEDIA&lt;/code&gt; is specified on command line, check removable then non removable devices&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093798000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093798000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090984998000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090984998000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;find_livefs ()
@@ -508,8 +508,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;Mount whatever is mountable (also tries lvm, iso etc) and check inside&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093816000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093816000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090985014000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090985014000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;check_dev ()
@@ -531,8 +531,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;If a file with &lt;code&gt;.squashfs&lt;/code&gt; or other fs extension exist inside a directory called &lt;code&gt;live/&lt;/code&gt;
 (&lt;code&gt;LIVE_MEDIA_PATH=&amp;quot;live&amp;quot;&lt;/code&gt; in &lt;code&gt;0001-init-vars.sh&lt;/code&gt;) boot from here.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093847000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093847000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;bash&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090985028000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090985028000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;bash&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-misc-helpers.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-bash&#34;&gt;&lt;code&gt;is_live_path()
@@ -551,8 +551,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;
 &lt;p&gt;And finally mount the live filesystem&amp;rsquo;s root to &lt;code&gt;/root&lt;/code&gt; via &lt;code&gt;setup_unionfs&lt;/code&gt;.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093865000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093865000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090985045000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090985045000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;    if [ -n &amp;#34;${MODULETORAMFILE}&amp;#34; ] || [ -n &amp;#34;${PLAIN_ROOT}&amp;#34; ]
@@ -569,8 +569,8 @@ done&lt;/code&gt;&lt;/pre&gt;
 to find out where &lt;code&gt;$rootmnt&lt;/code&gt; is set, you won&amp;rsquo;t find it. It is set in &lt;code&gt;initramfs&lt;/code&gt;&amp;rsquo;s &lt;code&gt;init&lt;/code&gt;
 script:&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093882000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093882000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;init&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090985061000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090985061000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;init&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;export rootmnt=/root&lt;/code&gt;&lt;/pre&gt;
@@ -592,8 +592,8 @@ but looks for this path instead.&lt;/p&gt;
 &lt;code&gt;/live&lt;/code&gt; dir in my luks -&amp;gt; lvm -&amp;gt; xfs setup ?&lt;/p&gt;
 &lt;p&gt;At the top of live-boot script, it tries to decrypt partitions.&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970093913000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970093913000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090985084000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090985084000&#34;&gt;&lt;span class=&#34;collapsable-code__language&#34;&gt;sh&lt;/span&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;9990-main.sh&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-sh&#34;&gt;&lt;code&gt;	if [ -x /scripts/local-top/cryptroot ]
@@ -771,14 +771,14 @@ mount: exec /Library/Filesystems/ext4.fs/Contents/Resources/mount_ext4 for /User
 &lt;p&gt;Looks like rasp pi 5 has a &lt;a href=&#34;https://forums.raspberrypi.com/viewtopic.php?t=358296&#34;&gt;dedicated uart&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;As per &lt;a href=&#34;https://github.com/raspberrypi/documentation/issues/3239#issuecomment-1819869459&#34;&gt;this&lt;/a&gt; and &lt;a href=&#34;https://pinout.xyz/pinout/uart&#34;&gt;this&lt;/a&gt; I need to explicitly enable &lt;code&gt;uart0&lt;/code&gt; as default uart is debug uart on 3 pin dedicated header (ie not on pin 14 and 15).&lt;/p&gt;
 &lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970094299000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970094299000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;config.txt&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090985412000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090985412000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;config.txt&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;dtparam=uart0_console   # Enable UART0/ttyAMA0 on GPIO 14 &amp;amp; 15 and make it the console UART&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;&lt;div class=&#34;collapsable-code&#34;&gt;
-  &lt;input id=&#34;code-1770130970094313000&#34; type=&#34;checkbox&#34;  /&gt;
-  &lt;label for=&#34;code-1770130970094313000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;cmdline.txt&lt;/span&gt;
+  &lt;input id=&#34;code-1776036090985426000&#34; type=&#34;checkbox&#34;  /&gt;
+  &lt;label for=&#34;code-1776036090985426000&#34;&gt;&lt;span class=&#34;collapsable-code__title&#34;&gt;cmdline.txt&lt;/span&gt;
     &lt;span class=&#34;collapsable-code__toggle&#34; data-label-expand=&#34;△&#34; data-label-collapse=&#34;▽&#34;&gt;&lt;/span&gt;
   &lt;/label&gt;
   &lt;pre class=&#34;language-text&#34;&gt;&lt;code&gt;console=serial0,115200&lt;/code&gt;&lt;/pre&gt;
