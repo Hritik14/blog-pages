@@ -324,8 +324,8 @@ value we set will be overwritten.</p></blockquote>
 Probably this debugger only captures stdout of a single process, but we did get two <code>Awake</code>s from child and
 parent. The stdout split happened only after the breakpoint. Let&rsquo;s get another debugger and attach it to child as well.</p>
 <div class="collapsable-code">
-  <input id="code-1776036090953536000" type="checkbox"  />
-  <label for="code-1776036090953536000"><span class="collapsable-code__language">c</span><span class="collapsable-code__title">parent</span>
+  <input id="code-1776036209350208000" type="checkbox"  />
+  <label for="code-1776036209350208000"><span class="collapsable-code__language">c</span><span class="collapsable-code__title">parent</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-c"><code>; lldb fork
@@ -357,8 +357,8 @@ Target 0: (fork) stopped.
 [62878] Awake!
 (lldb)</code></pre>
 </div><div class="collapsable-code">
-  <input id="code-1776036090953568000" type="checkbox"  />
-  <label for="code-1776036090953568000"><span class="collapsable-code__language">c</span><span class="collapsable-code__title">child</span>
+  <input id="code-1776036209350494000" type="checkbox"  />
+  <label for="code-1776036209350494000"><span class="collapsable-code__language">c</span><span class="collapsable-code__title">child</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-c"><code>; lldb -p 62878
@@ -438,8 +438,8 @@ Let&rsquo;s check the <code>pstree</code> at this moment in time:</p>
          \--- 62878 neo /Users/neo/raw/fork</code></pre><p>The child no longer belongs to the parent. The child has effectively been kidnapped by lldb !</p></blockquote>
 <p>A disassemble shows the current instruction pointer on a <code>brk</code> instruction.</p>
 <div class="collapsable-code">
-  <input id="code-1776036090953609000" type="checkbox"  />
-  <label for="code-1776036090953609000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">child</span>
+  <input id="code-1776036209350541000" type="checkbox"  />
+  <label for="code-1776036209350541000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">child</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-nasm"><code>(lldb) disassemble
@@ -463,8 +463,8 @@ fork`answer:
     0x1000004a0 &lt;&#43;64&gt;: ret</code></pre>
 </div><p>For reference, here&rsquo;s how it looks in the parent</p>
 <div class="collapsable-code">
-  <input id="code-1776036090953631000" type="checkbox"  />
-  <label for="code-1776036090953631000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">parent</span>
+  <input id="code-1776036209350562000" type="checkbox"  />
+  <label for="code-1776036209350562000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">parent</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-nasm"><code>(lldb) disassemble
@@ -499,8 +499,8 @@ program and keeps executing indefinitily without ever increasing program counter
 until the OS decided to kill it after the parent died.</p>
 <p>Would stepping over this instruction manually in the debugger solve our issue ?</p>
 <div class="collapsable-code">
-  <input id="code-1776036090953658000" type="checkbox"  />
-  <label for="code-1776036090953658000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">child</span>
+  <input id="code-1776036209350588000" type="checkbox"  />
+  <label for="code-1776036209350588000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">child</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-nasm"><code>(lldb) expr $pc = 0x100000470
@@ -532,8 +532,8 @@ Process 62878 exited with status = 0 (0x00000000)</code></pre>
 </div><p>Yes ! ?</p>
 <p>Sadly, no. The stdout is still connected to the parent <code>lldb</code> and we got a garbage answer from child.</p>
 <div class="collapsable-code">
-  <input id="code-1776036090953677000" type="checkbox"  />
-  <label for="code-1776036090953677000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">parent</span>
+  <input id="code-1776036209350609000" type="checkbox"  />
+  <label for="code-1776036209350609000"><span class="collapsable-code__language">nasm</span><span class="collapsable-code__title">parent</span>
     <span class="collapsable-code__toggle" data-label-expand="△" data-label-collapse="▽"></span>
   </label>
   <pre class="language-nasm"><code>[62878] the answer to life is -324843284
